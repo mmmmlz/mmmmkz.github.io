@@ -20,30 +20,35 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="great ideas in CV&amp;RS">
-<meta property="og:type" content="website">
-<meta property="og:title" content="luomian&#39;s Site">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="最近工作中用到因果推理相关知识，发现自己基础太弱，读读论文填充一下。 Abstract  Observational studies are rising in importance due to the widespread accumulation of data in fields such as healthcare, education, employment and ecology.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Learning Representations for Counterfactual Inference">
+<meta property="og:url" content="http://example.com/2022/12/03/paper20221203/index.html">
 <meta property="og:site_name" content="luomian&#39;s Site">
-<meta property="og:description" content="great ideas in CV&amp;RS">
+<meta property="og:description" content="最近工作中用到因果推理相关知识，发现自己基础太弱，读读论文填充一下。 Abstract  Observational studies are rising in importance due to the widespread accumulation of data in fields such as healthcare, education, employment and ecology.">
 <meta property="og:locale">
+<meta property="og:image" content="http://example.com/Users/mlz/Library/Application%20Support/typora-user-images/image-20221130220036103.png">
+<meta property="og:image" content="http://example.com/2022/12/03/paper20221203/pic1.png">
+<meta property="article:published_time" content="2022-12-03T14:46:54.000Z">
+<meta property="article:modified_time" content="2022-12-03T09:57:59.880Z">
 <meta property="article:author" content="mmmmlz">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/Users/mlz/Library/Application%20Support/typora-user-images/image-20221130220036103.png">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2022/12/03/paper20221203/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-Hans'
   };
 </script>
 
-  <title>luomian's Site</title>
+  <title>Learning Representations for Counterfactual Inference | luomian's Site</title>
   
 
 
@@ -143,9 +148,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
@@ -161,10 +167,9 @@
       <meta itemprop="name" content="luomian's Site">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/12/03/paper20221203/" class="post-title-link" itemprop="url">Learning Representations for Counterfactual Inference</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Learning Representations for Counterfactual Inference
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -202,7 +207,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>最近工作中用到因果推理相关知识，发现自己基础太弱，读读论文填充一下。</p>
+        <p>最近工作中用到因果推理相关知识，发现自己基础太弱，读读论文填充一下。</p>
 <h1 id="abstract">Abstract</h1>
 <blockquote>
 <p>Observational studies are rising in importance due to the widespread
@@ -222,178 +227,94 @@ state-of-the-art.</p>
 ​
 这里的域自适应指的是我们在一种样本集上训练出来的模型应该在该数据集的各领域内都是适应的，有点拗口，举个例子，我们希望预测对一个病人使用某种治疗手段是否会让它对病情好转，那么不管这个病人是高中学历还是大学学历，模型的预测结果都是一样的。但是我们实际的训练样本中，大多数的病人都是高中学历，那么我们使用这个模型去预测大学学历的病人时，效果就不一定会好。</p>
 <p>​
-本文将域自适应和反事实的推理进行了结合，主要方法是提出了一种正则公式让处于不同干预的人群的representations的分布更加接近，后面会详细介绍是怎么做的，本文的主要contributions有以下两点：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/12/03/paper20221203/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/12/03/testformer/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="mmmmlz">
-      <meta itemprop="description" content="great ideas in CV&RS">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="luomian's Site">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/12/03/testformer/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-12-03 17:14:25" itemprop="dateCreated datePublished" datetime="2022-12-03T17:14:25+08:00">2022-12-03</time>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>39</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>我的测试公式<span class="math inline">\(y_i\)</span>带我飞</p>
-<p>但是是多少 <span class="math display">\[
-min(x_j-y_j)
+本文将域自适应和反事实的推理进行了结合，主要方法是提出了一种正则公式让处于不同干预的人群的representations的分布更加接近，后面会详细介绍是怎么做的，本文的主要contributions有以下两点：<span id="more"></span></p>
+<ul>
+<li><p>我们证明了如何将反事实推理问题看作一个域自适应问题，也可以看作一个特殊的协变量转移问题。</p></li>
+<li><p>我们推导出一系列反事实推理的表征算法。一种是基于线性模型和变量选择，另一种是基于表征的深度学习结构。</p>
+<p>最后，我们的方法要优于基于重加权的样本采样方式,证明了拉进treatment组和control组特征表示对于反事实的推理是有益的。</p></li>
+</ul>
+<h1 id="problem-setup">Problem Setup</h1>
+<p>​
+这一节作者介绍了一些在因果推理领域常用的定义及标识，这里简单介绍一下。</p>
+<ul>
+<li><span class="math inline">\(\tau\)</span>:我们希望去预估的一些潜在的干预或者行为。比如对于低血糖的病人来说，我们有两种治疗手段。<span class="math inline">\(t\in\tau\)</span></li>
+<li><span class="math inline">\(\chi\)</span>:用户侧的特征，代表这些病人的背景（contexts),<span class="math inline">\(x\in\chi\)</span></li>
+<li><span class="math inline">\(y\)</span>:施加某种干预后的结果，例如给病人采用A手段进行治疗后血糖增加了多少。<span class="math inline">\(Y_t(x)\in y\)</span></li>
+</ul>
+<p>​ 我们希望计算的是<em>individualized treatment effect</em>(ITE)：<span class="math inline">\(Y_1(x)-Y_0(x)\)</span>，但是在现实情况下，我们只能得到对用户施加两种treatment的其中一种的outcome。所以通常我们会计算拥有相似分布<span class="math inline">\(x\)</span>的人群计算他们的<em>average treatment
+effect</em>(ATE):<span class="math inline">\(ATE=E[Y_1(x)−Y_0(x)]\)</span>。一个更常用的方法是通过模型去预估ITE。
+<span class="math display">\[
+\hat{ITE}(x_i) =\left\{
+\begin{aligned}
+y_i ^F-h(x_i,1-t_i), t=1\\
+h(x_i,1-t_i)-y_i ^F, t=0
+\end{aligned}
+\right.
+\]</span> ​ 其中<span class="math inline">\(y_i^F(x)\)</span>是我们观察到的事实结果，<span class="math inline">\(y_i^{CF}\)</span>是模型预估出来的反事实结果。这种方式不同于普通的深度学习建模，会有如下问题：假设我们观察到的样本为集合<span class="math inline">\(\hat{P}^F=\left\{x_i,t_i\right\}^n_{i=1}\)</span>，在计算ITE时我们需要计算这群样本另一个treatment下的结果<span class="math inline">\(\hat{P}^{CF}=\left\{x_i,1-t_i\right\}^n_{i=1}\)</span>。我们定义<span class="math inline">\(P^F\)</span>是<span class="math inline">\(\hat{P}^F\)</span>经过模型抽取特征后到分布<em>factual
+distribution</em>，同理<span class="math inline">\(P^{CF}\)</span>是<span class="math inline">\(\hat{P}^{CF}\)</span>经过模型抽取特征后到分布<em>counterfactual
+distribution</em>。显然这两个分布是不相等的，但如果这个分布的差异较大的话，模型可能会侧重学习到这两个分布的不同对于最终outcome的影响，而不是我们的treatment对于outcome的影响。在深度学习中这被叫做
+<em>covariate
+shift</em>，同时这也是一种域自适应问题。举个列子，在进行随机实验时，不同的人群获得不同treatment的概率应该是随机的，但是在实际的观察研究中，往往有很多因素影响着treament的发放，这就导致了<span class="math inline">\(t\)</span>与<span class="math inline">\(x\)</span>不独立。所以上述的两个分布的差异会比较大。</p>
+<h1 id="balancing-counterfactual-regression">Balancing counterfactual
+regression</h1>
+<p>​ 我们的方法如下图所示，首先我们对于Context学习一个表达<span class="math inline">\(\Phi:\chi \to
+\mathbb{R}^d\)</span>,这里我们可以使用深度网络也可以使用类似对样本进行加权筛选的方式。同时我去学习一个函数<span class="math inline">\(h\)</span>，这个函数通过预估对当前的用户表征施加不同的treatment后的结果，会同时权衡三个目标：1）使得我们能够观察到的正常样本的预测误差尽可能小。2）使得对于反事实样本的预测的误差尽可能小，这里对于反事实样本，由于我们并没有它的真实label，我们可以通过一些方式来构建一个伪label（后面会讲）。3）这个函数还要对不同干预下的representation进行一个平衡。
+​
+针对第一点，可以通过使用最小化error和一些正则方式来确保这个误差尽可能小，第二点，我们利用的是最近邻的方法，来构造反事实，即<span class="math inline">\(y_{i:t_i=0}^{CF}=y_{NN_i:i\neq0}^{CF}\)</span>其中<span class="math inline">\(NN_i\)</span>表示最近邻的邻居。本质是在模拟样本的反事实，有点类似于matching的方法。平衡好不同干预下的representation。第三点，我们通过最小化<em>discrepancy
+distance</em>这是域自适应的距离度量公式，后文会有详细介绍。</p>
+<p>​
+直观地说，减少treatment人群和control人群之间差异的表示防止模型在试图从事实领域推广到反事实领域时使用数据的“unreliable”方面。例如，如果在我们的样本中，几乎没有男性接受过药物A，那么推断男性对药物A的反应很容易出错，因此可能需要更谨慎地使用性别特征。</p>
+<figure>
+<img src="/Users/mlz/Library/Application%20Support/typora-user-images/image-20221130220036103.png" alt="image-20221130220036103">
+<figcaption aria-hidden="true">image-20221130220036103</figcaption>
+</figure>
+<p>​</p>
+<p>​ 我们希望最小化的损失函数如下：</p>
+<p>​<br>
+<span class="math display">\[
+B_{\mathcal{H},\alpha,\gamma}(\Phi,h)=\frac{1}{n}\sum_{i=1}^n|h(\Phi(x_i),t_i)-y_i^F|+\\
+\alpha \
+\text{disc}_\mathcal{H}(\hat{P}_\Phi^F,\hat{P}_\Phi^{CF})+\frac{\gamma}{n}\sum_{i=1}^n|h(\Phi(x_i),1-t_i)-y_{j(i)}^F|
 \]</span></p>
-<p>稍等</p>
+<p>​ 上式中，<span class="math inline">\(\alpha,\gamma&gt;0\)</span>是用来控制我们对于两个分布的相似度的限制力度，其中<span class="math inline">\(\text{disc}\)</span>是在后文定义的一种度量分布之间距离的函数。<span class="math inline">\(j(i)\in \text{arg min}_{j\in{\{1...n\}} s.t.
+t_j=1-t_i}\)</span> 即<span class="math inline">\(j\)</span>是在样本空间里和<span class="math inline">\(i\)</span>最相近的一个样本，注意每个样本只能被选择一次。</p>
+<h2 id="balancing-variable-selection">Balancing variable selection</h2>
+<p>​
+一个简单的方法去做样本间分布的平衡是只选择那些在treatmnet组和control组分布相似的特征，但是，那些被舍弃的不相似的特征往往是对预测结果很重要的，直接把他们忽略会影响预测的准确性。一种解决方式是限制这些不相似特征对于预测结果的影响，我们基于这种方式，学习一组稀疏的权重参数，通过平衡模型的预测能力已经样本之间的相似度来确定特征的重要性。作者介绍了两种方法，1）线性模型。2）深度模型。这里主要对深度模型做一些介绍，</p>
+<figure>
+<img src="pic1.png" alt="pic1">
+<figcaption aria-hidden="true">pic1</figcaption>
+</figure>
+<p>​ 如上图所示，作者在标准的前馈神经网络做了一些改进，首先，<span class="math inline">\(d_r\)</span>层通过学习一个表达<span class="math inline">\(\Phi(x)\)</span>将输入特征<span class="math inline">\(x\)</span>进行映射，这一这里使用的样本是没有带上treatment特征的，同时，这一层的输出会被用来计算上文提到的<span class="math inline">\(\text{disc}_\mathcal{H}(\hat{P}_\Phi^F,\hat{P}_\Phi^{CF})\)</span>,之后的<span class="math inline">\(d_o\)</span>层会将treatment特征作为额外特征加入。同时，注意到treatment的还有一根线连接到<span class="math inline">\(\text{disc}\)</span>的计算上，这是因为我们需要这个标签来指导当前样本是属于treatment组还是control组。
+​
+为什么要在网络中间将treatment作为额外特征加入而不是在网络一开始就一起训练呢，个人理解这是因为treatment往往很稀疏，为了避免treatment特征在网络前半段被大量其他特征淹没，所以在网络中间部分加入。同时，这样生成的表征<span class="math inline">\(\Phi\)</span>也完全代表了与treatment无关的特征。</p>
+<p>​
+最后作者通过一系列公式证明了上文中提到的分布差异对反事实的预测结果是有影响的，这里就不重复证明了，感兴趣可以去看原论文。最后的最后作者也指出当我们遇到多treatment情况时，可能需要更适合的算法。</p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/11/15/init/">
+        
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="mmmmlz">
-      <meta itemprop="description" content="great ideas in CV&RS">
-    </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="luomian's Site">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/11/15/init/" class="post-title-link" itemprop="url">init</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-11-15 14:07:53" itemprop="dateCreated datePublished" datetime="2022-11-15T14:07:53+08:00">2022-11-15</time>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>0</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/12/03/testformer/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
@@ -446,6 +367,8 @@ min(x_j-y_j)
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#problem-setup"><span class="nav-number">2.</span> <span class="nav-text">Problem Setup</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#balancing-counterfactual-regression"><span class="nav-number">3.</span> <span class="nav-text">Balancing counterfactual
+regression</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#balancing-variable-selection"><span class="nav-number">3.1.</span> <span class="nav-text">Balancing variable selection</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
