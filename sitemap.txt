@@ -1,4 +1,9 @@
 http://example.com/2022/12/03/paper20221203/
-http://example.com/2022/12/03/testformer/
+http://example.com/about/index.html
+http://example.com/tags/index.html
+http://example.com/categories/index.html
 http://example.com/2022/11/15/init/
 http://example.com/
+http://example.com/tags/causal/
+http://example.com/tags/DL/
+http://example.com/categories/paper-Reading/

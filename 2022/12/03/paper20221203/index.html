@@ -20,20 +20,22 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="最近工作中用到因果推理相关知识，发现自己基础太弱，读读论文填充一下。 Abstract  Observational studies are rising in importance due to the widespread accumulation of data in fields such as healthcare, education, employment and ecology.">
+  <meta name="description" content="​ 最近工作中用到因果推理相关知识，发现自己基础太弱，读读论文填充一下。首先介绍一篇经典的论文。这篇文章提出了一种利用领域适应和深度神经网络表示学习的框架方法来进行反事实结果推理  公式化反事实推理问题为领域适应问题，更具体一点，转化为协变量转变问题。 利用深度神经网络表示，线性模型和变量选择来进行反事实推理。 利用reweighting samples的方法使treatment和control">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Learning Representations for Counterfactual Inference">
 <meta property="og:url" content="http://example.com/2022/12/03/paper20221203/index.html">
 <meta property="og:site_name" content="luomian&#39;s Site">
-<meta property="og:description" content="最近工作中用到因果推理相关知识，发现自己基础太弱，读读论文填充一下。 Abstract  Observational studies are rising in importance due to the widespread accumulation of data in fields such as healthcare, education, employment and ecology.">
+<meta property="og:description" content="​ 最近工作中用到因果推理相关知识，发现自己基础太弱，读读论文填充一下。首先介绍一篇经典的论文。这篇文章提出了一种利用领域适应和深度神经网络表示学习的框架方法来进行反事实结果推理  公式化反事实推理问题为领域适应问题，更具体一点，转化为协变量转变问题。 利用深度神经网络表示，线性模型和变量选择来进行反事实推理。 利用reweighting samples的方法使treatment和control">
 <meta property="og:locale">
-<meta property="og:image" content="http://example.com/Users/mlz/Library/Application%20Support/typora-user-images/image-20221130220036103.png">
 <meta property="og:image" content="http://example.com/2022/12/03/paper20221203/pic1.png">
+<meta property="og:image" content="http://example.com/2022/12/03/paper20221203/pic2.png">
 <meta property="article:published_time" content="2022-12-03T14:46:54.000Z">
-<meta property="article:modified_time" content="2022-12-03T09:57:59.880Z">
+<meta property="article:modified_time" content="2022-12-03T11:23:48.756Z">
 <meta property="article:author" content="mmmmlz">
+<meta property="article:tag" content="causal">
+<meta property="article:tag" content="DL">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/Users/mlz/Library/Application%20Support/typora-user-images/image-20221130220036103.png">
+<meta name="twitter:image" content="http://example.com/2022/12/03/paper20221203/pic1.png">
 
 <link rel="canonical" href="http://example.com/2022/12/03/paper20221203/">
 
@@ -122,6 +124,21 @@
     <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
@@ -179,7 +196,16 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-12-03 22:46:54 / Modified: 17:57:59" itemprop="dateCreated datePublished" datetime="2022-12-03T22:46:54+08:00">2022-12-03</time>
+              <time title="Created: 2022-12-03 22:46:54 / Modified: 19:23:48" itemprop="dateCreated datePublished" datetime="2022-12-03T22:46:54+08:00">2022-12-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/paper-Reading/" itemprop="url" rel="index"><span itemprop="name">paper Reading</span></a>
+                </span>
             </span>
 
           <br>
@@ -188,7 +214,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>4.2k</span>
+              <span>4.4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -207,7 +233,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>最近工作中用到因果推理相关知识，发现自己基础太弱，读读论文填充一下。</p>
+        <p>​
+最近工作中用到因果推理相关知识，发现自己基础太弱，读读论文填充一下。首先介绍一篇经典的论文。这篇文章提出了一种利用领域适应和深度神经网络表示学习的框架方法来进行反事实结果推理</p>
+<ol type="1">
+<li>公式化反事实推理问题为领域适应问题，更具体一点，转化为协变量转变问题。</li>
+<li>利用深度神经网络表示，线性模型和变量选择来进行反事实推理。</li>
+<li>利用reweighting samples的方法使treatment和control groups
+distribution balanced<span id="more"></span></li>
+</ol>
 <h1 id="abstract">Abstract</h1>
 <blockquote>
 <p>Observational studies are rising in importance due to the widespread
@@ -227,7 +260,7 @@ state-of-the-art.</p>
 ​
 这里的域自适应指的是我们在一种样本集上训练出来的模型应该在该数据集的各领域内都是适应的，有点拗口，举个例子，我们希望预测对一个病人使用某种治疗手段是否会让它对病情好转，那么不管这个病人是高中学历还是大学学历，模型的预测结果都是一样的。但是我们实际的训练样本中，大多数的病人都是高中学历，那么我们使用这个模型去预测大学学历的病人时，效果就不一定会好。</p>
 <p>​
-本文将域自适应和反事实的推理进行了结合，主要方法是提出了一种正则公式让处于不同干预的人群的representations的分布更加接近，后面会详细介绍是怎么做的，本文的主要contributions有以下两点：<span id="more"></span></p>
+本文将域自适应和反事实的推理进行了结合，主要方法是提出了一种正则公式让处于不同干预的人群的representations的分布更加接近，后面会详细介绍是怎么做的，本文的主要contributions有以下两点：</p>
 <ul>
 <li><p>我们证明了如何将反事实推理问题看作一个域自适应问题，也可以看作一个特殊的协变量转移问题。</p></li>
 <li><p>我们推导出一系列反事实推理的表征算法。一种是基于线性模型和变量选择，另一种是基于表征的深度学习结构。</p>
@@ -264,10 +297,7 @@ regression</h1>
 distance</em>这是域自适应的距离度量公式，后文会有详细介绍。</p>
 <p>​
 直观地说，减少treatment人群和control人群之间差异的表示防止模型在试图从事实领域推广到反事实领域时使用数据的“unreliable”方面。例如，如果在我们的样本中，几乎没有男性接受过药物A，那么推断男性对药物A的反应很容易出错，因此可能需要更谨慎地使用性别特征。</p>
-<figure>
-<img src="/Users/mlz/Library/Application%20Support/typora-user-images/image-20221130220036103.png" alt="image-20221130220036103">
-<figcaption aria-hidden="true">image-20221130220036103</figcaption>
-</figure>
+<p>​ <img src="pic1.png" alt="figure 1"></p>
 <p>​</p>
 <p>​ 我们希望最小化的损失函数如下：</p>
 <p>​<br>
@@ -278,13 +308,10 @@ B_{\mathcal{H},\alpha,\gamma}(\Phi,h)=\frac{1}{n}\sum_{i=1}^n|h(\Phi(x_i),t_i)-y
 \]</span></p>
 <p>​ 上式中，<span class="math inline">\(\alpha,\gamma&gt;0\)</span>是用来控制我们对于两个分布的相似度的限制力度，其中<span class="math inline">\(\text{disc}\)</span>是在后文定义的一种度量分布之间距离的函数。<span class="math inline">\(j(i)\in \text{arg min}_{j\in{\{1...n\}} s.t.
 t_j=1-t_i}\)</span> 即<span class="math inline">\(j\)</span>是在样本空间里和<span class="math inline">\(i\)</span>最相近的一个样本，注意每个样本只能被选择一次。</p>
-<h2 id="balancing-variable-selection">Balancing variable selection</h2>
+<h2 id="method">Method</h2>
 <p>​
 一个简单的方法去做样本间分布的平衡是只选择那些在treatmnet组和control组分布相似的特征，但是，那些被舍弃的不相似的特征往往是对预测结果很重要的，直接把他们忽略会影响预测的准确性。一种解决方式是限制这些不相似特征对于预测结果的影响，我们基于这种方式，学习一组稀疏的权重参数，通过平衡模型的预测能力已经样本之间的相似度来确定特征的重要性。作者介绍了两种方法，1）线性模型。2）深度模型。这里主要对深度模型做一些介绍，</p>
-<figure>
-<img src="pic1.png" alt="pic1">
-<figcaption aria-hidden="true">pic1</figcaption>
-</figure>
+<p>​ <img src="pic2.png" alt="figure 2"></p>
 <p>​ 如上图所示，作者在标准的前馈神经网络做了一些改进，首先，<span class="math inline">\(d_r\)</span>层通过学习一个表达<span class="math inline">\(\Phi(x)\)</span>将输入特征<span class="math inline">\(x\)</span>进行映射，这一这里使用的样本是没有带上treatment特征的，同时，这一层的输出会被用来计算上文提到的<span class="math inline">\(\text{disc}_\mathcal{H}(\hat{P}_\Phi^F,\hat{P}_\Phi^{CF})\)</span>,之后的<span class="math inline">\(d_o\)</span>层会将treatment特征作为额外特征加入。同时，注意到treatment的还有一根线连接到<span class="math inline">\(\text{disc}\)</span>的计算上，这是因为我们需要这个标签来指导当前样本是属于treatment组还是control组。
 ​
 为什么要在网络中间将treatment作为额外特征加入而不是在网络一开始就一起训练呢，个人理解这是因为treatment往往很稀疏，为了避免treatment特征在网络前半段被大量其他特征淹没，所以在网络中间部分加入。同时，这样生成的表征<span class="math inline">\(\Phi\)</span>也完全代表了与treatment无关的特征。</p>
@@ -298,6 +325,10 @@ t_j=1-t_i}\)</span> 即<span class="math inline">\(j\)</span>是在样本空间�
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/causal/" rel="tag"># causal</a>
+              <a href="/tags/DL/" rel="tag"># DL</a>
+          </div>
 
         
 
@@ -305,8 +336,8 @@ t_j=1-t_i}\)</span> 即<span class="math inline">\(j\)</span>是在样本空间�
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/12/03/testformer/" rel="prev" title="">
-      <i class="fa fa-chevron-left"></i> 
+    <a href="/2022/11/15/init/" rel="prev" title="init">
+      <i class="fa fa-chevron-left"></i> init
     </a></div>
       <div class="post-nav-item"></div>
     </div>
@@ -368,7 +399,7 @@ t_j=1-t_i}\)</span> 即<span class="math inline">\(j\)</span>是在样本空间�
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
           <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#problem-setup"><span class="nav-number">2.</span> <span class="nav-text">Problem Setup</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#balancing-counterfactual-regression"><span class="nav-number">3.</span> <span class="nav-text">Balancing counterfactual
-regression</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#balancing-variable-selection"><span class="nav-number">3.1.</span> <span class="nav-text">Balancing variable selection</span></a></li></ol></li></ol></div>
+regression</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#method"><span class="nav-number">3.1.</span> <span class="nav-text">Method</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -382,9 +413,21 @@ regression</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a c
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">posts</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>

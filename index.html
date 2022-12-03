@@ -117,6 +117,21 @@
     <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
@@ -174,7 +189,16 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-12-03 22:46:54 / Modified: 17:57:59" itemprop="dateCreated datePublished" datetime="2022-12-03T22:46:54+08:00">2022-12-03</time>
+              <time title="Created: 2022-12-03 22:46:54 / Modified: 19:23:48" itemprop="dateCreated datePublished" datetime="2022-12-03T22:46:54+08:00">2022-12-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/paper-Reading/" itemprop="url" rel="index"><span itemprop="name">paper Reading</span></a>
+                </span>
             </span>
 
           <br>
@@ -183,7 +207,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>4.2k</span>
+              <span>4.4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -202,27 +226,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>最近工作中用到因果推理相关知识，发现自己基础太弱，读读论文填充一下。</p>
-<h1 id="abstract">Abstract</h1>
-<blockquote>
-<p>Observational studies are rising in importance due to the widespread
-accumulation of data in fields such as healthcare, education, employment
-and ecology. We consider the task of answering counterfactual questions
-such as, “Would this patient have lower blood sugar had she received a
-different medication?”. We propose a new algorithmic framework for
-counterfactual inference which brings together ideas from domain
-adaptation and representation learning. In addition to a theoretical
-justification, we perform an empirical comparison with previous
-approaches to causal inference from observational data. Our deep
-learning algorithm significantly outperforms the previous
-state-of-the-art.</p>
-</blockquote>
-<p>​
-本文主要解决的问题类似于：对于一个患有低血糖的病人来说，接受不同的治疗方式是否是有用的？为了解决这个问题，本文基于域自适应和表征学习提出了一个用于进行反事实推理的算法框架。
-​
-这里的域自适应指的是我们在一种样本集上训练出来的模型应该在该数据集的各领域内都是适应的，有点拗口，举个例子，我们希望预测对一个病人使用某种治疗手段是否会让它对病情好转，那么不管这个病人是高中学历还是大学学历，模型的预测结果都是一样的。但是我们实际的训练样本中，大多数的病人都是高中学历，那么我们使用这个模型去预测大学学历的病人时，效果就不一定会好。</p>
-<p>​
-本文将域自适应和反事实的推理进行了结合，主要方法是提出了一种正则公式让处于不同干预的人群的representations的分布更加接近，后面会详细介绍是怎么做的，本文的主要contributions有以下两点：</p>
+          <p>​
+最近工作中用到因果推理相关知识，发现自己基础太弱，读读论文填充一下。首先介绍一篇经典的论文。这篇文章提出了一种利用领域适应和深度神经网络表示学习的框架方法来进行反事实结果推理</p>
+<ol type="1">
+<li>公式化反事实推理问题为领域适应问题，更具体一点，转化为协变量转变问题。</li>
+<li>利用深度神经网络表示，线性模型和变量选择来进行反事实推理。</li>
+<li>利用reweighting samples的方法使treatment和control groups
+distribution balanced</li></ol>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2022/12/03/paper20221203/#more" rel="contents">
@@ -231,82 +241,6 @@ state-of-the-art.</p>
             </div>
           <!--/noindex-->
         
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/12/03/testformer/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="mmmmlz">
-      <meta itemprop="description" content="great ideas in CV&RS">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="luomian's Site">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/12/03/testformer/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-12-03 17:14:25" itemprop="dateCreated datePublished" datetime="2022-12-03T17:14:25+08:00">2022-12-03</time>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>39</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>我的测试公式<span class="math inline">\(y_i\)</span>带我飞</p>
-<p>但是是多少 <span class="math display">\[
-min(x_j-y_j)
-\]</span></p>
-<p>稍等</p>
-
       
     </div>
 
@@ -459,9 +393,21 @@ min(x_j-y_j)
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">posts</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>

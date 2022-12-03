@@ -11,7 +11,25 @@
   </url>
   
   <url>
-    <loc>http://example.com/2022/12/03/testformer/</loc>
+    <loc>http://example.com/about/index.html</loc>
+    
+    <lastmod>2022-12-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/index.html</loc>
+    
+    <lastmod>2022-12-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/categories/index.html</loc>
     
     <lastmod>2022-12-03</lastmod>
     
@@ -37,6 +55,27 @@
   </url>
 
   
+  <url>
+    <loc>http://example.com/tags/causal/</loc>
+    <lastmod>2022-12-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/DL/</loc>
+    <lastmod>2022-12-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
 
+  
+  <url>
+    <loc>http://example.com/categories/paper-Reading/</loc>
+    <lastmod>2022-12-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
   
 </urlset>
