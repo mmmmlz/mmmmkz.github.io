@@ -3,7 +3,7 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: luomian's Site
+title: kerwin's notebook
 subtitle: keep learning
 description: great ideas in CV&RS
 keywords:
@@ -105,3 +105,9 @@ deploy:
   type: 'git'
   repo: git@github.com:mmmmlz/mmmmlz.github.io.git
   branch: main
+
+# hexo-hide-posts
+hide_posts:
+  filter: hidden
+  public_generators: []
+  noindex: true

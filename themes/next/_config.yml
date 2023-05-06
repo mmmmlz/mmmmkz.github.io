@@ -251,15 +251,15 @@ post_meta:
 # Post wordcount display settings
 # Dependencies: https://github.com/theme-next/hexo-symbols-count-time
 symbols_count_time:
-  separated_meta: true
-  item_text_post: true
-  item_text_total: true
+  separated_meta: false
+  item_text_post: false
+  item_text_total: false
    #文章内是否显示
-  symbols: true
-  time: true
+  symbols: false
+  time: false
    # 网页底部是否显示
-  total_symbols: true
-  total_time: true
+  total_symbols: false
+  total_time: false
 
 # Use icon instead of the symbol # to indicate the tag at the bottom of the post
 tag_icon: false
@@ -720,11 +720,11 @@ firestore:
 # Get more information on http://ibruce.info/2015/04/04/busuanzi
 busuanzi_count:
   enable: false
-  total_visitors: true
+  total_visitors: false
   total_visitors_icon: user
-  total_views: true
+  total_views: false
   total_views_icon: eye
-  post_views: true
+  post_views: false
   post_views_icon: eye
 
 
