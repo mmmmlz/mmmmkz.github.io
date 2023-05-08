@@ -17,5 +17,5 @@ http://kerwinblog.top/tags/LLM/
 http://kerwinblog.top/tags/%E5%B9%BF%E5%91%8A/
 http://kerwinblog.top/tags/DL/
 http://kerwinblog.top/tags/causal/
-http://kerwinblog.top/categories/Notes/
 http://kerwinblog.top/categories/paper-Reading/
+http://kerwinblog.top/categories/Notes/
