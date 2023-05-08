@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://kerwinblog.top/2023/03/02/0302/</loc>
+    
+    <lastmod>2023-05-08</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://kerwinblog.top/2023/03/19/0319/</loc>
     
     <lastmod>2023-05-07</lastmod>
@@ -157,6 +166,13 @@
   
   <url>
     <loc>http://kerwinblog.top/tags/causal/</loc>
+    <lastmod>2023-05-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://kerwinblog.top/tags/CV/</loc>
     <lastmod>2023-05-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
