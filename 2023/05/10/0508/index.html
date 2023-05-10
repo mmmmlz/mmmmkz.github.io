@@ -1,0 +1,254 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Segment Anything | kerwin's notebook</title><meta name="author" content="mmmmlz"><meta name="copyright" content="mmmmlz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="随着最近大模型在NLP领域的大展神威，CV届对比起来略显沉闷了一点，不少人好奇，CV相关的大模型也不少（VIT，CLIP），那为什么没有出现类似大模型在NLP领域展示出来的“涌现”能力呢？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Segment Anything">
+<meta property="og:url" content="http://kerwinblog.top/2023/05/10/0508/index.html">
+<meta property="og:site_name" content="kerwin&#39;s notebook">
+<meta property="og:description" content="随着最近大模型在NLP领域的大展神威，CV届对比起来略显沉闷了一点，不少人好奇，CV相关的大模型也不少（VIT，CLIP），那为什么没有出现类似大模型在NLP领域展示出来的“涌现”能力呢？">
+<meta property="og:locale">
+<meta property="og:image" content="http://kerwinblog.top/img/11.png">
+<meta property="article:published_time" content="2023-05-10T11:01:41.000Z">
+<meta property="article:modified_time" content="2023-05-10T11:58:54.807Z">
+<meta property="article:author" content="mmmmlz">
+<meta property="article:tag" content="CV">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://kerwinblog.top/img/11.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://kerwinblog.top/2023/05/10/0508/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Segment Anything',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-05-10 19:58:54'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/backgound.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="kerwin's notebook" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/11.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">13</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> Article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/7.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="kerwin's notebook"><span class="site-name">kerwin's notebook</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> Article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Segment Anything</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-05-10T11:01:41.000Z" title="Created 2023-05-10 19:01:41">2023-05-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-05-10T11:58:54.807Z" title="Updated 2023-05-10 19:58:54">2023-05-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/paper-Reading/">paper Reading</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">3.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>12min</span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>随着最近大模型在NLP领域的大展神威，CV届对比起来略显沉闷了一点，不少人好奇，CV相关的大模型也不少（VIT，CLIP），那为什么没有出现类似大模型在NLP领域展示出来的“涌现”能力呢？<span id="more"></span> 知乎上有一个问题感觉很好：<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/597657073">为何 CV 里没有出现类似 NLP 大模型的涌现现象？</a>，这里我认为有一个答案说得不错：</p>
+<blockquote>
+<p>CV处理的是自然世界信息，信息往往离散、<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=semantic密度&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra={&quot;sourceType&quot;%3A&quot;answer&quot;%2C&quot;sourceId&quot;%3A3016292348}">semantic密度</a>低；而NLP处理的是文本，它抽象程度极高，semantic密度极高。文本既能承载真实存在的信息（“Earth is a planet in the solar system”），也能表述逻辑、情感（“I like this dog because it’s <a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=cute&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra={&quot;sourceType&quot;%3A&quot;answer&quot;%2C&quot;sourceId&quot;%3A3016292348}">cute</a>“），还能非常方便地和人类进行交互，在某种程度上和人类以很简单的方式互相”理解“。</p>
+</blockquote>
+<p>虽然能够一统CV的大模型没有出现，但是在细分领域，似乎已经有模型做到了类似的事情。</p>
+<p>今天介绍的这一篇face book的论文<a target="_blank" rel="noopener" href="https://ai.facebook.com/research/publications/segment-anything/">Segment Anything</a>是一个用于图像分割的新任务、模型和数据集。在他刚出来的那一天，知乎等平台就已经高呼CV已死。为了这个项目，作者创建了迄今为止最大的分割数据集，1100万张在10亿次授权且尊重隐私的图像上的数据集。模型也被设计和训练成了promptable,就是说可以给他一些提示。作者在多个数据集测试了他的结果并认为结果令人满意。</p>
+<p>项目地址<a target="_blank" rel="noopener" href="https://segment-anything.com/">https://segment-anything.com/</a></p>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>作者在引言中讨论了NLP工作中prompt的巨大作用，并回顾了视觉领域多模态的重要工作CLIP和ALIGN，最后说明了他们的目标和工作。</p>
+<p>首先，在网络上经过预训练的大型语言模型凭借其强大的zero-shot和few-shot能力革新NLP，prompt的引入使得这些模型zero-shot和few-shot性能与微调模型出奇的好。经验趋势表明，这种行为随着模型规模、数据集大小和总训练计算的增加而改善。</p>
+<p>CLIP和ALIGN使用对比学习来训练对齐两种模态的文本和图像编码器。经过训练后，prompt可以实现对新视觉概念和数据分布的zero-shot概括。这种编码器还与其他模块有效组合，以实现下游任务，如图像生成（例如，DALL·E）。虽然在视觉和语言编码器方面已经取得了很大进展，但计算机视觉包括了超出这一范围的广泛问题，而且对于其中许多问题，还不存在丰富的训练数据。</p>
+<p>作者提到在这项工作中，他们的目标是建立一个图像分割的基础模型。也就是说，他们在寻求开发一个可提示的模型，并使用能够实现强大泛化的任务在广泛的数据集上对其进行预训练。有了这个模型，他们的目标是使用即时工程解决新数据分布上的一系列下游分割问题。</p>
+<p>这个计划的成功取决于三个组成部分：任务、模型和数据。为了开发它们，作者解决了以下关于图像分割的问题： 1. 什么样的样本可以实现零样本泛化 2. 相应的模型架构是什么 3. 什么样的数据可以支撑这个人物和模型</p>
+<p>这些问题错综复杂，作者首先定义了一个promptable的分割任务，这可以提供强大的预训练目标，并且有广泛的下游任务可以应用。这个任务需要一个支持灵活的prompt的模型并且可以输出分割结果。为了训练这个模型，作者需要一个多样性的，大型的数据集，因此作者构建了一个数据引擎，使用高效的模型进行迭代。作者介绍了每个组件然后是创建的数据集和有效性的实验。</p>
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><p>作者从NLP领域获得灵感，在NLP的任务中，预测下一个token用于基础模型的训练，并通过prompt engineering 解决不同的下游任务。为了建立这样一个分割的基础模型，作者的目标书建立一个具有类似能力的任务 ### Task promptable的分割任务是给定任何prompt都能返回有效的分割掩码。有效的mask意味着即使prompt是不准确的或者涉及到多个对象的也应该的能够输出正确的或者合理的掩码。如图所示，每列显示SAM从单个不明确的点提示生成的3个有效掩码。</p>
+<p><img src="/2023/05/10/0508/20230407194759.png" alt="image.png"></p>
+<h2 id="预训练"><a href="#预训练" class="headerlink" title="预训练"></a>预训练</h2><p>promptable segmentation task 提出了一种自然的预训练算法，该算法模拟每个训练样本的提示序列（例如，点、框、掩码），并将模型的掩码预测与基本事实进行比较。作者将这种方法从交互式分割中改编出来，尽管与交互式分割不同，交互式分割的目的是在足够的用户输入后最终预测有效的掩码，但promptable segmentation task 的目的是始终预测任何提示的有效掩码，即使提示不明确的/错误的/荒谬的。</p>
+<h2 id="Zero-shot-推理"><a href="#Zero-shot-推理" class="headerlink" title="Zero-shot 推理"></a>Zero-shot 推理</h2><p>直观地说，预训练任务赋予了模型在推理时对任何提示做出适当响应的能力，因此下游任务可以通过设计适当的提示来解决。一般来说，一系列实用的分割任务可以作为提示。除了自动数据集标记外，作者还在第7部分中的实验中探索了五个不同的示例任务。 ## 模型 SAM包括了三个部分 一个 image encoder, 一个 flexible prompt encoder, 和一个 fast mask decoder</p>
+<p><img src="/2023/05/10/0508/20230407203046.png" alt="image.png" style="zoom:50%;"></p>
+<h2 id="image-encoder"><a href="#image-encoder" class="headerlink" title="image encoder"></a>image encoder</h2><p>受可扩展性和强大的预训练方法的启发，作者使用了MAE预训练的视觉转换器（ViT），该转换器至少适用于处理高分辨率输入。图像编码器每个图像运行一次，并且在prompt运行之前运行</p>
+<h2 id="prompt-encoder"><a href="#prompt-encoder" class="headerlink" title="prompt encoder"></a>prompt encoder</h2><p>作者考虑了两组提示：稀疏(sparse)（点、框、文本）和密集(dense)（掩码）。MAE通过位置编码来表示点和框，这些位置编码与每个使用CLIP的现成文本编码器来编码过的prompt的学习嵌入相加。dense prompt（即掩码）使用卷积嵌入，并与图像嵌入逐元素求和。</p>
+<h2 id="mask-decoder"><a href="#mask-decoder" class="headerlink" title="mask decoder"></a>mask decoder</h2><p>掩码解码器有效地将图像嵌入、提示嵌入和输出标记映射到掩码。这种设计受到的启发，对 Transformer decoder 进行了修改，然后是动态掩码预测头。修改后的解码器块在两个方向上使用提示自注意力和交叉注意力（(prompt-to-image embedding，反之亦然）来更新所有嵌入。在运行两个块后，对图像嵌入进行上采样，MLP将输出标记映射到动态线性分类器，然后计算每个图像位置的mask foreground 概率。</p>
+<h1 id="Data-engine"><a href="#Data-engine" class="headerlink" title="Data engine"></a>Data engine</h1><p>由于分割掩码在互联网上并不丰富，作者构建了一个数据引擎来实现1.1B 掩码数据集 SA-1B 的集合。</p>
+<p>数据引擎分为三个阶段：（1）模型辅助手动注释阶段，（2）混合自动预测掩码和模型辅助注释的半自动阶段，以及（3）全自动阶段，</p>
+<h3 id="手动阶段"><a href="#手动阶段" class="headerlink" title="手动阶段"></a>手动阶段</h3><p>在第一阶段，类似于经典的交互式分割，一组专业注释者通过使用由 SAM 驱动的基于浏览器的交互分割工具点击前景/背景对象点来标记掩码。可以使用像素精确的“刷”和“擦除”工具来细化掩码。模型辅助注释直接在浏览器内实时运行（使用预先计算的图像嵌入），从而实现真正的交互体验。标注不受语义约束，可以自由地标注”stuff” and “things”</p>
+<p><strong>注释者被要求按突出顺序标记对象，一旦掩码需要超过 30 秒进行注释，便鼓励继续下一个图像。</strong></p>
+<p>在SOTA之后，SAM就开始使用公共数据集进行训练，在经过了足够多的数据标注后，就用新标注的数据重新训练。随着收集更多的掩码，图像使用了ViT-H作为编码器。这样的模型训练一共进行了六次。随着模型的改进，每个掩码的平均注释时间从 34 秒减少到 14 秒。随着SAM的改进，每张图像的平均掩码数从20个掩码增加到44个掩码。总体而言，作者在这个阶段从 120k 张图像收集了 4.3M 掩码。</p>
+<h3 id="半自动化阶段"><a href="#半自动化阶段" class="headerlink" title="半自动化阶段"></a>半自动化阶段</h3><p>这个阶段的目标是增加mask的多样性。为了将标记集中在不太突出的对象上，首先自动检测confident masks。然后向注释者展示了用这些掩码预先填充的图像，并要求他们注释任何额外的未注释对象。为了检测confident masks，作者使用通用的“对象”类别在所有第一阶段掩码上训练了一个边界框检测器。在这个阶段，作者在 180k 图像中收集了一个额外的 5.9M 掩码（总共 10.2M 掩码）。在第一阶段，在新收集的数据（5 次）上定期重新训练模型。每个掩码的平均注释时间可以回到了到 34 秒（不包括自动掩码），因为这些对象对标签更具挑战性。每张图像的平均掩码数从 44 个掩码到 72 个掩码（包括自动掩码）。</p>
+<h3 id="全自动化阶段"><a href="#全自动化阶段" class="headerlink" title="全自动化阶段"></a>全自动化阶段</h3><p>这个阶段的主要目的是解决歧义</p>
+<p>正文部分说的不太清楚，在附录部分作者做了详细的解释。一共分为四个部分，Cropping，Filtering，Postprocessing，Automatic mask generation model。</p>
+<p>这个过程作者使用32∗32网格的点对图像进行预测，并为每个点预测一组可能对应于有效对象的掩码。如果说一个点位于一个部件或子部件上，我们的模型将返回子部分，部分和整个对象(subpart, part, and whole object)。利用模型中的IoU预测模块来选择confident mask.如果将概率图阈值设为0.5−δ和0.5 + δ会产生相似的掩码，那么这个掩码就被认为是是稳定的。为了进一步提高小mask的质量，还处理了多个重叠的放大mask。</p>
+<p>全自动掩码生成应用于数据集中的所有 11M 图像，总共产生了 1.1B 的高质量掩码。</p>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>SA的数据集使用data engine 构建的多样的高分辨率的有隐私保护的图像和1.1B个掩码组成。作者发布了这个这个数据集来帮助未来计算机视觉基础模型。SA-1B 将在某些研究用途的有利许可协议下发布，并为研究人员保护。 ### 图像 作者团队从直接与摄影师一起工作的提供商那里获得了一组新的高分辨率的11M图像。即使在下采样之后，这些图像的分辨率也明显高于许多现有的视觉数据集</p>
+<h3 id="掩码"><a href="#掩码" class="headerlink" title="掩码"></a>掩码</h3><p>数据引擎产生了 1.1B 掩码，其中 99.1% 是全自动生成的。因此，自动掩码的质量至关重要。作者团队将这些mask与专业标记的数据集进行标记，发现自动掩码对于训练模型是高质量和有效的。受这些发现的启发，SA-1B 仅包含自动生成的掩码。</p>
+<blockquote>
+<p>To estimate mask quality, we randomly sampled 500 images (∼50k masks) and asked our professional annotators to improve the quality of all masks in these images. Annotators did so using our model and pixel-precise “brush” and “eraser” editing tools. This procedure resulted in pairs of automatically predicted and professionally corrected masks. We computed IoU between each pair and found that 94% of pairs have greater than 90% IoU (and 97% of pairs have greater than 75% IoU). For comparison, prior work estimates inter-annotator consistency at 85-91% IoU [44, 60]. Our experiments in §7 confirm by human ratings that mask quality is high relative to a variety of datasets and that training our model on automatic masks is nearly as good as using all masks produced by the data engine. ## Responsible AI</p>
+</blockquote>
+<h2 id="Zero-Shot推理实验"><a href="#Zero-Shot推理实验" class="headerlink" title="Zero-Shot推理实验"></a>Zero-Shot推理实验</h2><p>作者在这里讨论了五个任务，其中四个与训练数据完全不同。这也避免了模型训练过程中能够看到答案。这几个任务分别是 1. zero-shot单点有效掩码评估 2. 执行边缘检测 3. 分割所有内容，即对象提议生成 4. 分割检测到的对象，即实例分割， 5. 作为概念验证，从自由形式的文本中分割对象。</p>
+<h1 id="讨论"><a href="#讨论" class="headerlink" title="讨论"></a>讨论</h1><p>自机器学习的早期以来，预训练模型已经适应下游任务。近年来，随着对规模的日益重视，这种范式变得越来越重要，并且此类模型最近被称为为“基础模型”，即”大规模在广泛的数据上训练并适应广泛的下游任务”</p>
+<p>作者的工作是与此高度相关的，尽管分割只是计算机视觉任务的一个子集。作者还将他们的方法的一个方面与另一项工作进行了对比<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2108.07258">Rishi Bommasani, Drew A Hudson, Ehsan Adeli, Russ Altman, Simran Arora, Sydney von Arx, Michael S Bernstein, Jeannette Bohg, Antoine Bosselut, Emma Brunskill, et al. On the opportunities and risks of foundation models. arXiv:2108.07258, 2021. 1, 12</a>，# On the Opportunities and Risks of Foundation Models强调了自监督学习在基础模型中的作用。虽然SA模型是用自监督技术(MAE)初始化的，但它的绝大多数能力来自于大规模的监督训练。在数据引擎可以扩展可用注释的情况下，监督训练提供了一种有效的解决方案。</p>
+<p>SA不可避免地也有一些局限性，SAM是为通用性和使用广度而设计的，不同于以往的很多工作，它不是高IoU交互式分割。虽然SAM可以执行许多任务，但目前尚不清楚如何设计简单的提示符来实现语义和全景分割。最后，还有一些领域特定的工具，它们在各自的领域中依然有希望优于SAM。</p>
+<p>总而言之，Segment Anything项目是将图像分割提升到基础模型时代的一种尝试。这项工作的主要贡献是一个新的任务(提示分割)，模型(SAM)和数据集(SA-1B)，使这一飞跃成为可能。SAM是否达到了基础模型的地位，仍然要看它在社区中是如何使用的，但这项工作的前景，超过1B个掩模的发布，以及作者的快速分割模型将有助于铺平前进的道路。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://kerwinblog.top">mmmmlz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://kerwinblog.top/2023/05/10/0508/">http://kerwinblog.top/2023/05/10/0508/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/CV/">CV</a></div><div class="post_share"><div class="social-share" data-image="/img/11.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/05/03/0503/" title="Let’s think step by step"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Let’s think step by step</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2023/04/28/0402/" title="Token Merging Your ViT But Faster"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-28</div><div class="title">Token Merging Your ViT But Faster</div></div></a></div><div><a href="/2023/03/02/0302/" title="U-Net in U-Net for Infrared Small Object Detection"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-02</div><div class="title">U-Net in U-Net for Infrared Small Object Detection</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/11.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">mmmmlz</div><div class="author-info__description">great ideas in CV&RS</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">13</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mmmmlz"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">Focus on the latest developments in recommendation algorithms, advertising algorithms, large models, etc.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E8%AE%AD%E7%BB%83"><span class="toc-number">2.1.</span> <span class="toc-text">预训练</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zero-shot-%E6%8E%A8%E7%90%86"><span class="toc-number">2.2.</span> <span class="toc-text">Zero-shot 推理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#image-encoder"><span class="toc-number">2.3.</span> <span class="toc-text">image encoder</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#prompt-encoder"><span class="toc-number">2.4.</span> <span class="toc-text">prompt encoder</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mask-decoder"><span class="toc-number">2.5.</span> <span class="toc-text">mask decoder</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Data-engine"><span class="toc-number">3.</span> <span class="toc-text">Data engine</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E9%98%B6%E6%AE%B5"><span class="toc-number">3.0.1.</span> <span class="toc-text">手动阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%8A%E8%87%AA%E5%8A%A8%E5%8C%96%E9%98%B6%E6%AE%B5"><span class="toc-number">3.0.2.</span> <span class="toc-text">半自动化阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E8%87%AA%E5%8A%A8%E5%8C%96%E9%98%B6%E6%AE%B5"><span class="toc-number">3.0.3.</span> <span class="toc-text">全自动化阶段</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">3.1.</span> <span class="toc-text">数据集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A9%E7%A0%81"><span class="toc-number">3.1.1.</span> <span class="toc-text">掩码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zero-Shot%E6%8E%A8%E7%90%86%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.2.</span> <span class="toc-text">Zero-Shot推理实验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%A8%E8%AE%BA"><span class="toc-number">4.</span> <span class="toc-text">讨论</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/10/0508/" title="Segment Anything">Segment Anything</a><time datetime="2023-05-10T11:01:41.000Z" title="Created 2023-05-10 19:01:41">2023-05-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/03/0503/" title="Let’s think step by step">Let’s think step by step</a><time datetime="2023-05-02T19:11:02.000Z" title="Created 2023-05-03 03:11:02">2023-05-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/04/28/0402/" title="Token Merging Your ViT But Faster">Token Merging Your ViT But Faster</a><time datetime="2023-04-27T19:11:02.000Z" title="Created 2023-04-28 03:11:02">2023-04-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/04/15/BidOptimization/" title="《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记">《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记</a><time datetime="2023-04-15T12:49:00.000Z" title="Created 2023-04-15 20:49:00">2023-04-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/03/19/0319/" title="Position bias">Position bias</a><time datetime="2023-03-18T19:11:02.000Z" title="Created 2023-03-19 03:11:02">2023-03-19</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/7.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By mmmmlz</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script></div></body></html>
