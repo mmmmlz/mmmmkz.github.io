@@ -1,0 +1,301 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>强化学习笔记1————马尔科夫链与Q值和V值 | kerwin's notebook</title><meta name="author" content="mmmmlz"><meta name="copyright" content="mmmmlz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="最近工作上的事情比较少，有时间来学一下自己一直比较感兴趣的强化学习，之前多次有想法去系统的学习一下，但都因为其他事情中断了，这次打算趁着这段时间比较空闲，把强化学习入个门，为了督促自己学下去，开个坑记录一下，争取用1-2周完成这个系列。 网上的教程大多数原自David Silver大神的课程（B站链接），各种翻译水平层次不齐，看到不好的教程直接把人劝退。在广泛的搜罗后发现知乎有一位大神的讲解很好">
+<meta property="og:type" content="article">
+<meta property="og:title" content="强化学习笔记1————马尔科夫链与Q值和V值">
+<meta property="og:url" content="http://kerwinblog.top/2023/05/04/rl-01/index.html">
+<meta property="og:site_name" content="kerwin&#39;s notebook">
+<meta property="og:description" content="最近工作上的事情比较少，有时间来学一下自己一直比较感兴趣的强化学习，之前多次有想法去系统的学习一下，但都因为其他事情中断了，这次打算趁着这段时间比较空闲，把强化学习入个门，为了督促自己学下去，开个坑记录一下，争取用1-2周完成这个系列。 网上的教程大多数原自David Silver大神的课程（B站链接），各种翻译水平层次不齐，看到不好的教程直接把人劝退。在广泛的搜罗后发现知乎有一位大神的讲解很好">
+<meta property="og:locale">
+<meta property="og:image" content="http://kerwinblog.top/img/11.png">
+<meta property="article:published_time" content="2023-05-04T13:34:21.000Z">
+<meta property="article:modified_time" content="2023-05-11T15:15:39.098Z">
+<meta property="article:author" content="mmmmlz">
+<meta property="article:tag" content="RL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://kerwinblog.top/img/11.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://kerwinblog.top/2023/05/04/rl-01/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '强化学习笔记1————马尔科夫链与Q值和V值',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-05-11 23:15:39'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/backgound.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="kerwin's notebook" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/11.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> Article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/7.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="kerwin's notebook"><span class="site-name">kerwin's notebook</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> Article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">强化学习笔记1————马尔科夫链与Q值和V值</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-05-04T13:34:21.000Z" title="Created 2023-05-04 21:34:21">2023-05-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-05-11T15:15:39.098Z" title="Updated 2023-05-11 23:15:39">2023-05-11</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Notes/">Notes</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">2.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>6min</span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>最近工作上的事情比较少，有时间来学一下自己一直比较感兴趣的强化学习，之前多次有想法去系统的学习一下，但都因为其他事情中断了，这次打算趁着这段时间比较空闲，把强化学习入个门，为了督促自己学下去，开个坑记录一下，争取用1-2周完成这个系列。</p>
+<p>网上的教程大多数原自David Silver大神的课程（<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/av45357759/?from=search&amp;seid=14511237738925991591">B站链接</a>），各种翻译水平层次不齐，看到不好的教程直接把人劝退。在广泛的搜罗后发现知乎有一位大神的讲解很好，本系列也是结合视频以及他的文章所做的学习笔记。<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/111895463">原文链接</a></p>
+<h1 id="马尔科夫链">马尔科夫链</h1>
+<p>谈起强化学习就一定离不开马尔科夫链，就像谈起神经网络就离不开神经元一样。作为在大学《随机课程》里面就接触到过的概念，这里理解起来还是比较容易的的，这里的简要的回顾一下。</p>
+<p>70年代的时候，数学家们为了更好的研究强化学习问题，提出了重要的假设——<strong>马尔科夫性</strong>（Markov
+property），它讲的是系统的下一个状态<span class="math inline">\(S_{t+1}\)</span>仅与当前状态<span class="math inline">\(S_t\)</span>有关，而与之前的所有状态无关，即：
+<span class="math display">\[
+P[s_{t+1}|s_t]=P[S_{t+1}|s_1,s_2,...s_t]
+\]</span>
+这个公式强大的地方在于我们可以把历史全部甩去，只对当前状态负责任，注意到上式是一个条件概率，也就是说：我当前看到一帧图像，我未来可能会看到的下一帧图像的概率，等于从我历史上看到的所有图像、到下一帧图像的概率；以打砖块为例，我当前把这个游戏打成这个德行，它可能是有很多很多次操作促成的，但没关系，我都不管，未来我要怎么操作，只和我当前的德行有关，至于过去是怎么做的，我完全不管。因为有了马尔科夫性，我当前概率由很多的历史状态过来，它们都有相应的概率，于是就可以将这些概率展开，直接进行状态向前推移或回退的计算。就算状态数量很多，我至少“扔掉了历史的包袱”。</p>
+<figure>
+<img src="/2023/05/04/rl-01/v2-44177b73b63d6ee182d574a1aeaa28ac_720w.jpg" alt="怎样正确理解马尔科夫链？">
+<figcaption aria-hidden="true">怎样正确理解马尔科夫链？</figcaption>
+</figure>
+<p>在强化学习中，马尔科夫链的经典表达图例这样的。在马尔科夫链中，有三个重要的元素：S，A，R。我们分别来看一下，他们代表的是什么。然后大家就会明白，为什么马尔科夫链是一个很好很常用的模型。</p>
+<ol type="1">
+<li>智能体在环境中，观察到状态(S)；</li>
+<li>状态(S)被输入到智能体，智能体经过计算，选择动作(A);</li>
+<li>动作(A)使智能体进入另外一个状态(S)，并返回奖励(R)给智能体。</li>
+<li>智能体根据返回，调整自己的策略。
+重复以上步骤，一步一步创造马尔科夫链。</li>
+</ol>
+<h3 id="总结">总结</h3>
+<ol type="1">
+<li>马尔科夫链是用来描述智能体和环境互动的过程。</li>
+<li>马尔科夫链包含三要素：state，action，reward</li>
+</ol>
+<ul>
+<li>state：只有智能体能够观察到的才是state。</li>
+<li>action：智能体的动作。</li>
+<li>reward：引导智能体工作学习的主观的值。</li>
+<li>马尔科夫链的不确定性</li>
+<li>核心思想：如果你不希望孩子有某种行为，那么当这种行为出现的时候就进行惩罚。如果你希望孩子坚持某种行为，那么就进行奖励。这也是整个强化学习的核心思想</li>
+</ul>
+<h1 id="v值和q值">V值和Q值</h1>
+<p>学习V值和Q值之前牢记一句话：<strong>V是对状态节点的估算，Q是对动作节点的估算</strong>。其中，我们估算的是，从该节点，一直到最终状态，能够获得的奖励的总和的平均值。</p>
+<figure>
+<img src="/2023/05/04/rl-01/image-20230511231143059.png" alt="image-20230511231143059">
+<figcaption aria-hidden="true">image-20230511231143059</figcaption>
+</figure>
+<p><strong>V值的定义</strong></p>
+<p>从V值的计算，我们可以知道，V值代表了这个状态的今后能获得奖励的期望。从这个状态出发，到达最终状态，平均而言能拿到多少奖励。所以我们轻易比较两个状态的价值。V值跟我们选择的策略有很大的关系。
+<strong>会根据不同的策略有所变化</strong>！具体来说，会更加每个测量选择的概率不同而不同，因为最后算期望的的时候，其实是各个Q值的概率加权平均。</p>
+<p><strong>Q值的定义</strong></p>
+<p>如果了解V值的定义，那么理解Q值也不会有什么困难。Q值和V值的概念是一致的，都是衡量在马可洛夫树上某一个节点的价值。只不过V值衡量的是状态节点的价值，而Q值衡量的是动作节点的价值。用大白话总结就是：从某个状态选取动作A，走到最终状态很多很多次；最终获得奖励总和的平均值，就是Q值。<strong>【敲黑板】</strong>
+与V值不同，Q值和策略并没有直接相关，而与环境的状态转移概率相关，而环境的状态转移概率是不变的。</p>
+<h2 id="v值和q值关系">V值和Q值关系</h2>
+<p>总结一下，从以上的定义，我们可以知道Q值和V值的意义相通的： 1.
+都是马可洛夫树上的节点； 2. 价值评价的方式是一样的： - 从当前节点出发 -
+一直走到最终节点-所有的奖励的期望值.所以，其实Q和V之间是可以相互换算的。</p>
+<p><strong>从Q到V</strong></p>
+<p>我们先来看看，怎样用Q值算V值。</p>
+<p>从定义出发，我们要求的V值，就是从状态S出发，到最终获取的所获得的奖励总和的期望值。也就是蓝色框部分。</p>
+<p>S状态下有若干个动作，每个动作的Q值，就是从这个动作之后所获得的奖励总和的期望值。也就是红色框部分。</p>
+<p>假设我们已经计算出每个动作的Q值，那么在计算V值的时候就不需要一直走到最终状态了，只需要走到动作节点，看一下每个动作节点的Q值，根据策略
+，计算Q的期望就是V值了。</p>
+<figure>
+<img src="/2023/05/04/rl-01/image-20230511230401913.png" alt="image-20230511230401913">
+<figcaption aria-hidden="true">image-20230511230401913</figcaption>
+</figure>
+<p>大白话就是：一个状态的V值，就是这个状态下的所有动作的Q值，在策略
+下的期望。</p>
+<p><strong>从V到Q</strong></p>
+<p>现在我们换个角度，看一下怎样从V换算成Q值。</p>
+<figure>
+<img src="/2023/05/04/rl-01/image-20230511230542554.png" alt="image-20230511230542554">
+<figcaption aria-hidden="true">image-20230511230542554</figcaption>
+</figure>
+<p>道理还是一样，就是用Q就是V的期望！而且这里不需要关注策略，这里是环境的状态转移概率决定的。注意当我们选择A，并转移到新的状态时，就能获得奖励，我们必须把这个<strong>奖励也算上！</strong></p>
+<figure>
+<img src="/2023/05/04/rl-01/image-20230511230502923.png" alt="image-20230511230502923">
+<figcaption aria-hidden="true">image-20230511230502923</figcaption>
+</figure>
+<p>其中，<strong>折扣率</strong>：在强化学习中，有某些参数是人为<strong>主观</strong>制定。这些参数并不能推导，但在实际应用中却能解决问题，所以我们称这些参数为<strong>超参数</strong>，而折扣率就是一个超参数。
+与金融产品说的贴现率是类似的。我们计算Q值，目的就是把未来很多步奖励，折算到当前节点。但未来n步的奖励的10点奖励，与当前的10点奖励是否完全等价呢？未必。所以我们人为地给未来的奖励一定的折扣，例如：0.9,0.8，然后在计算到当前的Q值。</p>
+<p>现在我们知道如何从V到Q，从Q到V了。但实际应用中，我们更多会从V到V。</p>
+<p>但其实从V到V也是很简单的。把公式代进去就可以了。</p>
+<figure>
+<img src="/2023/05/04/rl-01/image-20230511231341431.png" alt="image-20230511231341431">
+<figcaption aria-hidden="true">image-20230511231341431</figcaption>
+</figure>
+<h3 id="总结-1">总结</h3>
+<ol type="1">
+<li>比起记住公式，其实我们更应该注意Q值和V值的意义：他们就像一个路牌一样，告诉我们从马可洛夫树的一个节点出发，下面所有节点的收获的期望值。也就是假设从这个节点开始，走许多许多次，最终获取的奖励的平均值。</li>
+<li>V就是子节点的Q的期望！但要注意V值和策略相关。</li>
+<li>Q就是子节点的V的期望！但要注意，记得把R计算在内。</li>
+</ol>
+<p>目前来看，计算某一个节点的Q值和V值，需要许多次试验，取其中的平均值。但实际上，我们不但需要求一个节点的值，而是求所有节点的值。如果我们每一个节点都用同样的方法，消耗必然会很大。所以人们发明了许多方式去计算Q值和V值，基于价值计算的算法就是围绕Q和V展开的。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://kerwinblog.top">mmmmlz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://kerwinblog.top/2023/05/04/rl-01/">http://kerwinblog.top/2023/05/04/rl-01/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/RL/">RL</a></div><div class="post_share"><div class="social-share" data-image="/img/11.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/05/10/0508/" title="Segment Anything"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Segment Anything</div></div></a></div><div class="next-post pull-right"><a href="/2023/05/03/0503/" title="Let’s think step by step"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Let’s think step by step</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/11.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">mmmmlz</div><div class="author-info__description">great ideas in CV&RS</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mmmmlz"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">Focus on the latest developments in recommendation algorithms, advertising algorithms, large models, etc.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A9%AC%E5%B0%94%E7%A7%91%E5%A4%AB%E9%93%BE"><span class="toc-number">1.</span> <span class="toc-text">马尔科夫链</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.0.1.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#v%E5%80%BC%E5%92%8Cq%E5%80%BC"><span class="toc-number">2.</span> <span class="toc-text">V值和Q值</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#v%E5%80%BC%E5%92%8Cq%E5%80%BC%E5%85%B3%E7%B3%BB"><span class="toc-number">2.1.</span> <span class="toc-text">V值和Q值关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-number">2.1.1.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/10/0508/" title="Segment Anything">Segment Anything</a><time datetime="2023-05-10T11:01:41.000Z" title="Created 2023-05-10 19:01:41">2023-05-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/04/rl-01/" title="强化学习笔记1————马尔科夫链与Q值和V值">强化学习笔记1————马尔科夫链与Q值和V值</a><time datetime="2023-05-04T13:34:21.000Z" title="Created 2023-05-04 21:34:21">2023-05-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/03/0503/" title="Let’s think step by step">Let’s think step by step</a><time datetime="2023-05-02T19:11:02.000Z" title="Created 2023-05-03 03:11:02">2023-05-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/04/28/0402/" title="Token Merging Your ViT But Faster">Token Merging Your ViT But Faster</a><time datetime="2023-04-27T19:11:02.000Z" title="Created 2023-04-28 03:11:02">2023-04-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/04/15/BidOptimization/" title="《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记">《Bid Optimization by Multivariable Control in Display Advertising》阅读笔记</a><time datetime="2023-04-15T12:49:00.000Z" title="Created 2023-04-15 20:49:00">2023-04-15</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/7.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By mmmmlz</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script></div></body></html>
