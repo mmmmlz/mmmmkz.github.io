@@ -2,9 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://kerwinblog.top/2023/05/25/0525/</loc>
+    
+    <lastmod>2023-05-25</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://kerwinblog.top/2023/05/20/0520/</loc>
     
-    <lastmod>2023-05-20</lastmod>
+    <lastmod>2023-05-25</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://kerwinblog.top/2023/04/15/BidOptimization/</loc>
+    
+    <lastmod>2023-05-25</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -48,15 +66,6 @@
   
   <url>
     <loc>http://kerwinblog.top/2023/05/04/rl-01/</loc>
-    
-    <lastmod>2023-05-11</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://kerwinblog.top/2023/04/15/BidOptimization/</loc>
     
     <lastmod>2023-05-11</lastmod>
     
@@ -211,7 +220,7 @@
 
   <url>
     <loc>http://kerwinblog.top/</loc>
-    <lastmod>2023-05-20</lastmod>
+    <lastmod>2023-05-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -219,56 +228,56 @@
   
   <url>
     <loc>http://kerwinblog.top/tags/Rec-System/</loc>
-    <lastmod>2023-05-20</lastmod>
+    <lastmod>2023-05-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://kerwinblog.top/tags/LLM/</loc>
-    <lastmod>2023-05-20</lastmod>
+    <lastmod>2023-05-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://kerwinblog.top/tags/%E5%B9%BF%E5%91%8A/</loc>
-    <lastmod>2023-05-20</lastmod>
+    <lastmod>2023-05-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://kerwinblog.top/tags/DL/</loc>
-    <lastmod>2023-05-20</lastmod>
+    <lastmod>2023-05-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://kerwinblog.top/tags/causal/</loc>
-    <lastmod>2023-05-20</lastmod>
+    <lastmod>2023-05-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://kerwinblog.top/tags/CV/</loc>
-    <lastmod>2023-05-20</lastmod>
+    <lastmod>2023-05-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://kerwinblog.top/tags/RL/</loc>
-    <lastmod>2023-05-20</lastmod>
+    <lastmod>2023-05-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://kerwinblog.top/tags/RS/</loc>
-    <lastmod>2023-05-20</lastmod>
+    <lastmod>2023-05-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -277,14 +286,14 @@
   
   <url>
     <loc>http://kerwinblog.top/categories/paper-Reading/</loc>
-    <lastmod>2023-05-20</lastmod>
+    <lastmod>2023-05-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://kerwinblog.top/categories/Notes/</loc>
-    <lastmod>2023-05-20</lastmod>
+    <lastmod>2023-05-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
