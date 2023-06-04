@@ -25,12 +25,12 @@ http://kerwinblog.top/2022/05/27/0527/
 http://kerwinblog.top/2023/01/14/0112/
 http://kerwinblog.top/
 http://kerwinblog.top/tags/Rec-System/
+http://kerwinblog.top/tags/CV/
+http://kerwinblog.top/tags/DL/
+http://kerwinblog.top/tags/RS/
 http://kerwinblog.top/tags/LLM/
 http://kerwinblog.top/tags/%E5%B9%BF%E5%91%8A/
-http://kerwinblog.top/tags/DL/
 http://kerwinblog.top/tags/causal/
-http://kerwinblog.top/tags/CV/
 http://kerwinblog.top/tags/RL/
-http://kerwinblog.top/tags/RS/
 http://kerwinblog.top/categories/paper-Reading/
 http://kerwinblog.top/categories/Notes/

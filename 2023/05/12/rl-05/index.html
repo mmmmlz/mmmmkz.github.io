@@ -1,9 +1,9 @@
-<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>强化学习笔记5————AC与PPO | kerwin's notebook</title><meta name="author" content="mmmmlz"><meta name="copyright" content="mmmmlz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="关于AC，很多书籍和教程都说AC是DQN和PG的结合，虽然正确但从这个角度去看不便于理解，安装我们之前的思路，PG利用带权重的梯度下降方法更新策略，而获得权重的方法是蒙地卡罗计算G值。蒙地卡罗需要完成整个游戏过程，直到最终状态，才能通过回溯计算G值。这使得PG方法的效率被限制。那我们可不可以更快呢？相信大家已经想到了，那就是改为TD。 Actor-Critic什么是AC但改为TD还有一个问题需要解">
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>强化学习笔记5————AC与PPO | kerwin's notebook</title><meta name="author" content="mmmmlz"><meta name="copyright" content="mmmmlz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="关于AC，很多书籍和教程都说AC是DQN和PG的结合，虽然正确但从这个角度去看不便于理解，安装我们之前的思路，PG利用带权重的梯度下降方法更新策略，而获得权重的方法是蒙地卡罗计算G值。蒙地卡罗需要完成整个游戏过程，直到最终状态，才能通过回溯计算G值。这使得PG方法的效率被限制。那我们可不可以更快呢？相信大家已经想到了，那就是改为TD。 Actor-Critic 什么是AC 但改为TD还有一个">
 <meta property="og:type" content="article">
 <meta property="og:title" content="强化学习笔记5————AC与PPO">
 <meta property="og:url" content="http://kerwinblog.top/2023/05/12/rl-05/index.html">
 <meta property="og:site_name" content="kerwin&#39;s notebook">
-<meta property="og:description" content="关于AC，很多书籍和教程都说AC是DQN和PG的结合，虽然正确但从这个角度去看不便于理解，安装我们之前的思路，PG利用带权重的梯度下降方法更新策略，而获得权重的方法是蒙地卡罗计算G值。蒙地卡罗需要完成整个游戏过程，直到最终状态，才能通过回溯计算G值。这使得PG方法的效率被限制。那我们可不可以更快呢？相信大家已经想到了，那就是改为TD。 Actor-Critic什么是AC但改为TD还有一个问题需要解">
+<meta property="og:description" content="关于AC，很多书籍和教程都说AC是DQN和PG的结合，虽然正确但从这个角度去看不便于理解，安装我们之前的思路，PG利用带权重的梯度下降方法更新策略，而获得权重的方法是蒙地卡罗计算G值。蒙地卡罗需要完成整个游戏过程，直到最终状态，才能通过回溯计算G值。这使得PG方法的效率被限制。那我们可不可以更快呢？相信大家已经想到了，那就是改为TD。 Actor-Critic 什么是AC 但改为TD还有一个">
 <meta property="og:locale">
 <meta property="og:image" content="http://kerwinblog.top/img/11.png">
 <meta property="article:published_time" content="2023-05-12T13:00:18.000Z">
@@ -162,60 +162,110 @@
     }
     detectApple()
     })(window)</script><link rel="stylesheet" href="/css/backgound.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="kerwin's notebook" type="application/atom+xml">
-</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/11.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">22</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> Article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/7.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="kerwin's notebook"><span class="site-name">kerwin's notebook</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> Article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">强化学习笔记5————AC与PPO</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-05-12T13:00:18.000Z" title="Created 2023-05-12 21:00:18">2023-05-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-05-16T11:47:14.495Z" title="Updated 2023-05-16 19:47:14">2023-05-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Notes/">Notes</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">4.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>14min</span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>关于AC，很多书籍和教程都说AC是DQN和PG的结合，虽然正确但从这个角度去看不便于理解，安装我们之前的思路，PG利用带权重的梯度下降方法更新策略，而获得权重的方法是蒙地卡罗计算G值。蒙地卡罗需要完成整个游戏过程，直到最终状态，才能通过回溯计算G值。这使得PG方法的效率被限制。那我们可不可以更快呢？相信大家已经想到了，那就是改为TD。</p>
-<h1 id="Actor-Critic"><a href="#Actor-Critic" class="headerlink" title="Actor-Critic"></a>Actor-Critic</h1><h2 id="什么是AC"><a href="#什么是AC" class="headerlink" title="什么是AC"></a>什么是AC</h2><p>但改为TD还有一个问题需要解决，就是：在PG，我们需要计算G值；那么在TD中，我们应该怎样估算每一步的Q值呢？</p>
-<p>熟悉的问题：其实这个问题我们在学DQN的时候也遇到过。 熟悉的套路：我们用上万能的神经网络解决。</p>
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/11.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">22</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> Article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/7.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="kerwin's notebook"><span class="site-name">kerwin's notebook</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> Article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">强化学习笔记5————AC与PPO</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-05-12T13:00:18.000Z" title="Created 2023-05-12 21:00:18">2023-05-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-05-16T11:47:14.495Z" title="Updated 2023-05-16 19:47:14">2023-05-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Notes/">Notes</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">4.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>14min</span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>关于AC，很多书籍和教程都说AC是DQN和PG的结合，虽然正确但从这个角度去看不便于理解，安装我们之前的思路，PG利用带权重的梯度下降方法更新策略，而获得权重的方法是蒙地卡罗计算G值。蒙地卡罗需要完成整个游戏过程，直到最终状态，才能通过回溯计算G值。这使得PG方法的效率被限制。那我们可不可以更快呢？相信大家已经想到了，那就是改为TD。</p>
+<h1 id="actor-critic">Actor-Critic</h1>
+<h2 id="什么是ac">什么是AC</h2>
+<p>但改为TD还有一个问题需要解决，就是：在PG，我们需要计算G值；那么在TD中，我们应该怎样估算每一步的Q值呢？</p>
+<p>熟悉的问题：其实这个问题我们在学DQN的时候也遇到过。
+熟悉的套路：我们用上万能的神经网络解决。</p>
 <p>也就是说，Actor-Critic，其实是用了两个网络：</p>
-<p>两个网络有一个共同点，输入状态S: 一个输出策略，负责选择动作，我们把这个网络成为Actor； 一个负责计算每个动作的分数，我们把这个网络成为Critic。</p>
-<h2 id="TD-error"><a href="#TD-error" class="headerlink" title="TD-error"></a>TD-error</h2><p>注意:这是AC的重点。很多同学在这里会和DQN搞乱，也就是容易产生误解的地方。在DQN预估的是Q值，在AC中的Critic，估算的是V值。你可能会说，为什么不是Q值呢？说好是给动作评价呢。我们可以直接用network估算的Q值作为更新值，但效果会不太好。原因我们可以看下图：</p>
-<p><img src="/2023/05/12/rl-05/image-20230514105431293.png" alt="image-20230514105431293"></p>
-<p>假设我们用Critic网络，预估到S状态下三个动作A1，A2，A3的Q值分别为1,2,10。但在开始的时候，我们采用平均策略，于是随机到A1。于是我们用策略梯度的带权重方法更新策略，这里的权重就是Q值。于是策略会更倾向于选择A1，意味着更大概率选择A1。结果A1的概率就持续升高…这就掉进了正数陷阱。我们明明希望A3能够获得更多的机会，最后却是A1获得最多的机会。</p>
+<p>两个网络有一个共同点，输入状态S:
+一个输出策略，负责选择动作，我们把这个网络成为Actor；
+一个负责计算每个动作的分数，我们把这个网络成为Critic。</p>
+<h2 id="td-error">TD-error</h2>
+<p>注意:这是AC的重点。很多同学在这里会和DQN搞乱，也就是容易产生误解的地方。在DQN预估的是Q值，在AC中的Critic，估算的是V值。你可能会说，为什么不是Q值呢？说好是给动作评价呢。我们可以直接用network估算的Q值作为更新值，但效果会不太好。原因我们可以看下图：</p>
+<figure>
+<img src="/2023/05/12/rl-05/image-20230514105431293.png" alt="image-20230514105431293">
+<figcaption aria-hidden="true">image-20230514105431293</figcaption>
+</figure>
+<p>假设我们用Critic网络，预估到S状态下三个动作A1，A2，A3的Q值分别为1,2,10。但在开始的时候，我们采用平均策略，于是随机到A1。于是我们用策略梯度的带权重方法更新策略，这里的权重就是Q值。于是策略会更倾向于选择A1，意味着更大概率选择A1。结果A1的概率就持续升高...这就掉进了正数陷阱。我们明明希望A3能够获得更多的机会，最后却是A1获得最多的机会。</p>
 <p>这是为什么呢？这是因为Q值用于是一个正数，如果权重是一个正数，那么我们相当于提高对应动作的选择的概率。权重越大，我们调整的幅度将会越大。其实当我们有足够的迭代次数，这个是不用担心这个问题的。因为总会有机会抽中到权重更大的动作，因为权重比较大，抽中一次就能提高很高的概率。但在强化学习中，往往没有足够的时间让我们去和环境互动。这就会出现由于运气不好，使得一个<strong>很好</strong>的动作没有被采样到的情况发生。要解决这个问题，我们可以通过减去一个baseline，令到权重有正有负。而通常这个baseline，我们选取的是权重的平均值。减去平均值之后，值就变成有正有负了。而Q值的期望(均值)就是V。</p>
-<p><img src="/2023/05/12/rl-05/image-20230514105718124.png" alt="image-20230514105718124"></p>
-<p>所以我们可以得到更新的权重$Q(s,a)-V(s)$随之而来的问题是，这就需要两个网络来估计Q和V了。但马尔科夫告诉我们，很多时候，V和Q是可以互相换算的。$Q(s,a)$用$gamma <em> V(s’) + r $来代替，于是整理后就可以得到：$gamma </em> V(s’) + r - V(s) $ 我们把这个差，叫做TD-error,这个和之前DQN的更新公式非常像，只不过DQN的更新用了Q，而TD-error用的是V。眼尖的同学可能已经发现，如果Critic是用来预估V值，而不是原来讨论的Q值。那么，这个TD-error是用来更新Critic的loss了！没错，Critic的任务就是让TD-error尽量小。然后TD-error给Actor做更新。</p>
-<h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><ol>
-<li><p>定义两个network：Actor 和 Critic</p>
-</li>
-<li><p>j进行N次更新。</p>
-</li>
-<li><ol>
-<li>从状态s开始，执行动作a，得到奖励r，进入状态s’</li>
+<figure>
+<img src="/2023/05/12/rl-05/image-20230514105718124.png" alt="image-20230514105718124">
+<figcaption aria-hidden="true">image-20230514105718124</figcaption>
+</figure>
+<p>所以我们可以得到更新的权重<span class="math inline">\(Q(s,a)-V(s)\)</span>随之而来的问题是，这就需要两个网络来估计Q和V了。但马尔科夫告诉我们，很多时候，V和Q是可以互相换算的。<span class="math inline">\(Q(s,a)\)</span>用$gamma * V(s') + r <span class="math inline">\(来代替，于是整理后就可以得到：\)</span>gamma *
+V(s') + r - V(s) $
+我们把这个差，叫做TD-error,这个和之前DQN的更新公式非常像，只不过DQN的更新用了Q，而TD-error用的是V。眼尖的同学可能已经发现，如果Critic是用来预估V值，而不是原来讨论的Q值。那么，这个TD-error是用来更新Critic的loss了！没错，Critic的任务就是让TD-error尽量小。然后TD-error给Actor做更新。</p>
+<h2 id="算法">算法</h2>
+<ol type="1">
+<li><p>定义两个network：Actor 和 Critic</p></li>
+<li><p>j进行N次更新。</p></li>
+<li><ol type="1">
+<li>从状态s开始，执行动作a，得到奖励r，进入状态s'</li>
 <li>记录的数据。</li>
-<li>把输入到Critic，根据公式： $TD<em>{error} = gamma * V(s’) + r - V(s)$ 求$TD</em>{error}$，并缩小$TD_{error}$</li>
+<li>把输入到Critic，根据公式： <span class="math inline">\(TD_{error} =
+gamma * V(s&#39;) + r - V(s)\)</span> 求<span class="math inline">\(TD_{error}\)</span>，并缩小<span class="math inline">\(TD_{error}\)</span></li>
 <li>把输入到Actor，计算策略分布 。</li>
-</ol>
-</li>
+</ol></li>
 </ol>
 <p><img src="/2023/05/12/rl-05/image-20230514110611974.png" alt="image-20230514110611974" style="zoom: 67%;"></p>
-<p><strong>更新流程</strong> 我们可以把更新流程和PG做对比： 在PG，智能体需要从头一直跑到尾，直到最终状态才开始进行学习。 在AC，智能体采用是每步更新的方式。但要注意，我们需要先更新Critic，并计算出TD-error。再用TD-error更新Actor。</p>
+<p><strong>更新流程</strong> 我们可以把更新流程和PG做对比：
+在PG，智能体需要从头一直跑到尾，直到最终状态才开始进行学习。
+在AC，智能体采用是每步更新的方式。但要注意，我们需要先更新Critic，并计算出TD-error。再用TD-error更新Actor。</p>
 <p>但在实做得时候，很多时候我们会把Actor和Critic公用网络前面的一些层。例如state是一张图片，我们可以先通过几层的CNN进行特征的提取，再分别输出Actor的动作概率分布和Critic的V值。</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ol>
-<li>为了避免正数陷阱，我们希望Actor的更新权重有正有负。因此，我们把Q值减去他们的均值V。有：$Q(s,a)-V(s)$</li>
-<li>为了避免需要预估V值和Q值，我们希望把Q和V统一；由于$Q(s,a) = gamma <em> V(s’) + r - V(s)$。所以我们得到TD-error公式： $TD-error = gamma </em> V(s’) + r - V(s)$</li>
+<h2 id="小结">小结</h2>
+<ol type="1">
+<li>为了避免正数陷阱，我们希望Actor的更新权重有正有负。因此，我们把Q值减去他们的均值V。有：<span class="math inline">\(Q(s,a)-V(s)\)</span></li>
+<li>为了避免需要预估V值和Q值，我们希望把Q和V统一；由于<span class="math inline">\(Q(s,a) = gamma * V(s&#39;) + r -
+V(s)\)</span>。所以我们得到TD-error公式： <span class="math inline">\(TD-error = gamma * V(s&#39;) + r -
+V(s)\)</span></li>
 <li>TD-error就是Actor更新策略时候，带权重更新中的权重值；</li>
 <li>现在Critic不再需要预估Q，而是预估V。而根据马可洛夫链所学，我们知道TD-error就是Critic网络需要的loss，也就是说，Critic函数需要最小化TD-error。</li>
 </ol>
-<h1 id="PPO"><a href="#PPO" class="headerlink" title="PPO"></a>PPO</h1><h2 id="on-policy与off-policy"><a href="#on-policy与off-policy" class="headerlink" title="on-policy与off-policy"></a>on-policy与off-policy</h2><p>邻近策略优化（Proximal Policy Optimization，PPO）算法的网络结构有两个。PPO算法解决的问题是 <strong>离散动作空间和连续动作空间</strong> 的强化学习问题，是 <strong>on-policy</strong> 的强化学习算法。论文原文见《<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1707.06347.pdf">Proximal Policy Optimization Algorithms</a>》</p>
-<p>关于on-policy和off-policy的定义，网上有很多不同的讨论，比较常见的说法是看behavior policy（行为策略，即与环境进行交互的策略）和target policy（目标策略，即学习准确地评估Q值的策略）是否为同一个，如果为同一个，那么就为on-policy，反之为off-policy。我认为， 更加通俗一点的理解是，<strong>on-policy和off-policy的差异</strong> 在于 <strong>训练目标策略 所用到的数据$ (s,a,r,s′)$（有时候也表现为数据 $(s,a,r,s′,a′)$ ）是不是当前目标策略（此时还没开始训练）得到的</strong> ，如果是目标策略得到的，那么就是on-policy，如果不是，那么就是off-policy。</p>
+<h1 id="ppo">PPO</h1>
+<h2 id="on-policy与off-policy">on-policy与off-policy</h2>
+<p>邻近策略优化（Proximal Policy
+Optimization，PPO）算法的网络结构有两个。PPO算法解决的问题是
+<strong>离散动作空间和连续动作空间</strong> 的强化学习问题，是
+<strong>on-policy</strong> 的强化学习算法。论文原文见《<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1707.06347.pdf">Proximal Policy Optimization
+Algorithms</a>》</p>
+<p>关于on-policy和off-policy的定义，网上有很多不同的讨论，比较常见的说法是看behavior
+policy（行为策略，即与环境进行交互的策略）和target
+policy（目标策略，即学习准确地评估Q值的策略）是否为同一个，如果为同一个，那么就为on-policy，反之为off-policy。我认为，
+更加通俗一点的理解是，<strong>on-policy和off-policy的差异</strong> 在于
+<strong>训练目标策略 所用到的数据$ (s,a,r,s′)$（有时候也表现为数据 <span class="math inline">\((s,a,r,s′,a′)\)</span>
+）是不是当前目标策略（此时还没开始训练）得到的</strong>
+，如果是目标策略得到的，那么就是on-policy，如果不是，那么就是off-policy。</p>
 <p>这样说有点难以理解，我们举个例子：</p>
-<p>如果我们在智能体和环境进行互动时产生的数据打上一个标记。标记这是第几版本的策略产生的数据,例如 1， 2… 10.现在我们的智能体用的策略 10，需要更新到 11。如果算法只能用 10版本的产生的数据来更新，那么这个就是在线策略；如果算法允许用其他版本的数据来更新，那么就是离线策略。所以，我们需要用到重要性更新的，就可以用上之前策略版本的数据了。</p>
+<p>如果我们在智能体和环境进行互动时产生的数据打上一个标记。标记这是第几版本的策略产生的数据,例如
+1， 2... 10.现在我们的智能体用的策略 10，需要更新到 11。如果算法只能用
+10版本的产生的数据来更新，那么这个就是在线策略；如果算法允许用其他版本的数据来更新，那么就是离线策略。所以，我们需要用到重要性更新的，就可以用上之前策略版本的数据了。</p>
 <p>我们来看看之前学习到的算法都属于哪一种？</p>
-<h3 id="SARSA算法"><a href="#SARSA算法" class="headerlink" title="SARSA算法"></a><strong>SARSA算法</strong></h3><p>首先回顾一下SARSA的更新公式：</p>
-<script type="math/tex; mode=display">
-Q(S_t,A_t) \leftarrow Q(S_t,A_t)+\alpha[R_{t+1}+\gamma Q(S_{t+1},A_{t})-Q(S_{t},A_{t})]</script><p>想一想，在SARSA选择当前状态的策略时是怎么选择的呢？没错，使用epsilon-greedy选择Q值最大的那一个。那再想一想，在更新当前行为状态的Q值时，我们需要用下一个状态的某一个Q值来更新，那选择哪一个Q值呢？使用相同策略下的动作的Q值！那么显然，在Sarsa中更新Q函数时用的A就是贪婪策略得出来的，下一回合也用的是这个A去进行step。两个A一定相同就是（同策略）on-policy。</p>
-<h3 id="Q-learning"><a href="#Q-learning" class="headerlink" title="Q_learning"></a>Q_learning</h3><p>Q_learning的更新公式为：</p>
-<p><img src="/2023/05/12/rl-05/image-20230514115222702.png" alt="image-20230514115222702"></p>
+<h3 id="sarsa算法"><strong>SARSA算法</strong></h3>
+<p>首先回顾一下SARSA的更新公式： <span class="math display">\[
+Q(S_t,A_t) \leftarrow Q(S_t,A_t)+\alpha[R_{t+1}+\gamma
+Q(S_{t+1},A_{t})-Q(S_{t},A_{t})]
+\]</span>
+想一想，在SARSA选择当前状态的策略时是怎么选择的呢？没错，使用epsilon-greedy选择Q值最大的那一个。那再想一想，在更新当前行为状态的Q值时，我们需要用下一个状态的某一个Q值来更新，那选择哪一个Q值呢？使用相同策略下的动作的Q值！那么显然，在Sarsa中更新Q函数时用的A就是贪婪策略得出来的，下一回合也用的是这个A去进行step。两个A一定相同就是（同策略）on-policy。</p>
+<h3 id="q_learning">Q_learning</h3>
+<p>Q_learning的更新公式为：</p>
+<figure>
+<img src="/2023/05/12/rl-05/image-20230514115222702.png" alt="image-20230514115222702">
+<figcaption aria-hidden="true">image-20230514115222702</figcaption>
+</figure>
 <p>同样的分析，在选择策略时同样是使用epsilon-greedy，但是在更新Q值的时候，这里选择的是Q值最大的那一个。这时两者可能不一样，就是（异策略）off-policy。</p>
-<h2 id="Proximal-Policy-Optimization"><a href="#Proximal-Policy-Optimization" class="headerlink" title="Proximal Policy Optimization"></a>Proximal Policy Optimization</h2><h3 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h3><p>PPO算法的基础框架就是上面提到的AC算法，所以理所当然的ppo的网络结构也分为两部分：Actor网络和Critic网络。</p>
+<h2 id="proximal-policy-optimization">Proximal Policy Optimization</h2>
+<h3 id="网络结构">网络结构</h3>
+<p>PPO算法的基础框架就是上面提到的AC算法，所以理所当然的ppo的网络结构也分为两部分：Actor网络和Critic网络。</p>
 <p><img src="/2023/05/12/rl-05/image-20230514125114964.png" alt="image-20230514125114964" style="zoom:67%;"></p>
-<p>一个actor网络，一个<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=critic网络&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra={&quot;sourceType&quot;%3A&quot;article&quot;%2C&quot;sourceId&quot;%3A&quot;384497349&quot;}">critic网络</a>。</p>
-<p>actor网络的输入为状态，输出为动作概率 $\pi(a_t|s_t)$ （对于离散动作空间而言）或者动作概率分布参数（对于连续动作空间而言）</p>
+<p>一个actor网络，一个<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=critic网络&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22article%22%2C%22sourceId%22%3A%22384497349%22%7D">critic网络</a>。</p>
+<p>actor网络的输入为状态，输出为动作概率 <span class="math inline">\(\pi(a_t|s_t)\)</span>
+（对于离散动作空间而言）或者动作概率分布参数（对于连续动作空间而言）</p>
 <p>critic网络的输入为状态，输出为状态的价值。</p>
 <p>显然，如果actor网络输出的动作越能够使优势（优势的定义等下给出）变大，那么就越好。如果critic网络输出的状态价值越准确，那么就越好。</p>
-<h3 id="产生连续输出"><a href="#产生连续输出" class="headerlink" title="产生连续输出"></a>产生连续输出</h3><p>首先，我们要想办法处理连续动作的输出问题。我们先说离散动作。离散动作就像一个个的按钮，按一个按钮就能智能体就做一个动作。就像在CartPole游戏里的智能体，只有0,1两个动作分别代表向左走，向右走。那什么是连续动作呢。这就相当于这些按钮不但有开关的概念，而且还有力度大小的概念。就像我们开车，不但是前进后退转弯，并且要控制油门踩多深，刹车踩多少的，转弯时候转向转多少的问题。于是问题来了，在离散动作空间的问题中，我们最终输出的策略呈现这样的形式。</p>
-<p><img src="/2023/05/12/rl-05/image-20230516190405663.png" alt="image-20230516190405663"></p>
-<p>假设动作空间有只有action1 和 action2，有40%的概率选择action1 ，60%概率选择action2。也就是说在这个状态下的策略分布: pi = [0.4, 0.6]。但连续型动作怎么表示呢，还记得之前学习DQN的时候，DQN的函数就像一张布覆盖到了Qtable上吗？其实连续型动作的理解也是一样的。我们可以理解，把连续型概率切成很多很多份。每一份的数值，就代表该动作的概率。</p>
-<p>在连续型，我们不再用数组表示，而是用函数表示。例如，策略分布函数 ： P = （action）代表在策略 下，选择某个action的概率P。但这就有个问题，用神经网络预测输出的策略是一个固定的shape，而不是连续的。那又什么办法可以表示连续型的概率呢？我们先假定策略分布函数服从一个特殊的分布，这个特殊的分布可以用一两个参数表示它的图像。正态分布就是这样一个分布，他只需要两个参数，就可以表示了。</p>
+<h3 id="产生连续输出">产生连续输出</h3>
+<p>首先，我们要想办法处理连续动作的输出问题。我们先说离散动作。离散动作就像一个个的按钮，按一个按钮就能智能体就做一个动作。就像在CartPole游戏里的智能体，只有0,1两个动作分别代表向左走，向右走。那什么是连续动作呢。这就相当于这些按钮不但有开关的概念，而且还有力度大小的概念。就像我们开车，不但是前进后退转弯，并且要控制油门踩多深，刹车踩多少的，转弯时候转向转多少的问题。于是问题来了，在离散动作空间的问题中，我们最终输出的策略呈现这样的形式。</p>
+<figure>
+<img src="/2023/05/12/rl-05/image-20230516190405663.png" alt="image-20230516190405663">
+<figcaption aria-hidden="true">image-20230516190405663</figcaption>
+</figure>
+<p>假设动作空间有只有action1 和 action2，有40%的概率选择action1
+，60%概率选择action2。也就是说在这个状态下的策略分布: pi = [0.4,
+0.6]。但连续型动作怎么表示呢，还记得之前学习DQN的时候，DQN的函数就像一张布覆盖到了Qtable上吗？其实连续型动作的理解也是一样的。我们可以理解，把连续型概率切成很多很多份。每一份的数值，就代表该动作的概率。</p>
+<p>在连续型，我们不再用数组表示，而是用函数表示。例如，策略分布函数 ： P
+= （action）代表在策略
+下，选择某个action的概率P。但这就有个问题，用神经网络预测输出的策略是一个固定的shape，而不是连续的。那又什么办法可以表示连续型的概率呢？我们先假定策略分布函数服从一个特殊的分布，这个特殊的分布可以用一两个参数表示它的图像。正态分布就是这样一个分布，他只需要两个参数，就可以表示了。</p>
 <p><img src="/2023/05/12/rl-05/image-20230516190617708.png" alt="image-20230516190617708" style="zoom: 50%;"></p>
 <p>正态分布长得就是这个形状，中间高，两边低。他的形状由两个参数表示sigma，mu。</p>
 <ul>
@@ -224,11 +274,15 @@ Q(S_t,A_t) \leftarrow Q(S_t,A_t)+\alpha[R_{t+1}+\gamma Q(S_{t+1},A_{t})-Q(S_{t},
 </ul>
 <p>我们的神经网络可以直接输出mu和sigma，就能获得整个策略的概率密度函数了。</p>
 <p>现在我们已经有概率密度函数，那么当我们要按概率选出一个动作时，就只需要按照整个密度函数抽样出来就可以了。</p>
-<h3 id="Off-Policy"><a href="#Off-Policy" class="headerlink" title="Off Policy"></a><strong>Off Policy</strong></h3><p>如上文中所说，PG，就是一个在线策略。因为PG用于产生数据的策略（行为策略），和需要更新的策略（目标策略）是一致。而DQN则是一个离线策略。我们会让智能体在环境互动一定次数，获得数据。用这些数据优化策略后，继续跑新的数据。但老版本的数据我们仍然是可以用的。也就是说，我们产生数据的策略，和要更新的目标策略不是同一个策略。所以DQN是一个离线策略。</p>
+<h3 id="off-policy"><strong>Off Policy</strong></h3>
+<p>如上文中所说，PG，就是一个在线策略。因为PG用于产生数据的策略（行为策略），和需要更新的策略（目标策略）是一致。而DQN则是一个离线策略。我们会让智能体在环境互动一定次数，获得数据。用这些数据优化策略后，继续跑新的数据。但老版本的数据我们仍然是可以用的。也就是说，我们产生数据的策略，和要更新的目标策略不是同一个策略。所以DQN是一个离线策略。</p>
 <p>但为什么PG和AC中的Actor更新，就不能像DQN一样，把数据存起来，更新多次呢？答案是在一定条件下，能，PPO做的工作就是这个。在了解在什么条件下可以的时候，我们需要先了解一下，为什么不能。</p>
 <p>为了给大家直观的理解，我们来看这么一个简化的例子。</p>
 <p>我们来看这么一个简化的例子：</p>
-<p><img src="/2023/05/12/rl-05/image-20230516191437053.png" alt="image-20230516191437053"></p>
+<figure>
+<img src="/2023/05/12/rl-05/image-20230516191437053.png" alt="image-20230516191437053">
+<figcaption aria-hidden="true">image-20230516191437053</figcaption>
+</figure>
 <p>假设，我们已知在同一个环境下，有两个动作可以选择。现在两个策略，分别是P和B：</p>
 <p>P: [0.5,0.5] B: [0.1,0.9]</p>
 <p>现在我们按照两个策略，进行采样；也就是分别按照这两个策略，以S状态下出发，与环境进行10次互动。获得如图数据。那么，我们可以用B策略下获得的数据，更新P吗？</p>
@@ -237,28 +291,58 @@ Q(S_t,A_t) \leftarrow Q(S_t,A_t)+\alpha[R_{t+1}+\gamma Q(S_{t+1},A_{t})-Q(S_{t},
 <p>这自然不是我们期望看到的更新结果，因为动作1的TD-error比动作2要大，我们希望选择概率动作1的能更多呀。</p>
 <p>从这个例子，大家可以大致明白，为什么我们在更新策略的时候，不能用其他策略产生的数据了。</p>
 <p>但为什么DQN可以多次重复使用数据呢？</p>
-<p>我们可以从两个角度看： </p>
-<ol>
-<li>更新Q值，和策略无关。 在同一个动作出发，可能会通往不同的state，但其中的概率是有环境所决定的，而不是我们的策略所决定的。所以我们产生的数据和策略并没有关系。</li>
-<li>在DQN的更新中，我们是有”目标”的。 虽然目标比较飘忽，但每次更新，其实都是尽量向目标靠近。无论更新多少次，最终都会在目标附近徘徊。但PG算法，更新是不断远离原来的策略分布的，所以远离多少，远离的次数比例，我们都必须把握好。</li>
+<p>我们可以从两个角度看：</p>
+<ol type="1">
+<li>更新Q值，和策略无关。
+在同一个动作出发，可能会通往不同的state，但其中的概率是有环境所决定的，而不是我们的策略所决定的。所以我们产生的数据和策略并没有关系。</li>
+<li>在DQN的更新中，我们是有"目标"的。
+虽然目标比较飘忽，但每次更新，其实都是尽量向目标靠近。无论更新多少次，最终都会在目标附近徘徊。但PG算法，更新是不断远离原来的策略分布的，所以远离多少，远离的次数比例，我们都必须把握好。</li>
 </ol>
-<h3 id="Important-sampling"><a href="#Important-sampling" class="headerlink" title="Important-sampling"></a>Important-sampling</h3><p>那么，PPO是怎样做到离线更新策略的呢？答案是Important-sampling，重要性采样技术。如果我们想用策略B抽样出来的数据，来更新策略P也不是不可以。但我们要把td-error乘以一个重要性权重（IW：importance weight）。重要性权重：$IW = P（a）/ B（a）$应用在PPO，就是目标策略出现动作a的概率 除以 行为策略出现a的概率。回到我们之前的例子，我们可以计算出，每个动作的 重要性权重，P: [0.5,0.5] B: [0.1,0.9]</p>
-<p>我们以a1为例，计算重要性权重$IW = P / B = 0.5/0.1 = 5$我们把重要性权重乘以td-error，我们发现，a1的td-error大幅提升，而a2的td-error减少了。现在即使我们用P策略: [0.5,0.5]进行更新，a1提升的概率也会比a2的更多。PPO应用了importance sampling，使得我们用行为策略获取的数据，能够更新目标策略，把AC从在线策略，变成离线策略。</p>
-<h3 id="整体流程"><a href="#整体流程" class="headerlink" title="整体流程"></a>整体流程</h3><p>1、将环境信息s输入到actor-new网络， 得到两个值， 一个是mu， 一个是<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=sigma&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra={&quot;sourceType&quot;%3A&quot;article&quot;%2C&quot;sourceId&quot;%3A&quot;62225540&quot;}">sigma</a>， 然后将这两个值分别当作正态分布的均值和方差构建正态分布(意义是表示action的分布)，然后通过这个正态分布sample出来一个action， 再输入到环境中得到奖励r和下一步的状态s<em>，然后存储[(s,a,r),…], 再将s</em>输入到actor-new网络，循环步骤1， 直到存储了一定量的[(s, a, r), …]， 注意这个过程中actor-new网络没有更新。</p>
-<p>2、将1循环完最后一步得到的s<em>输入到critic-NN网络中， 得到状态的v</em>值， 然后计算折扣奖励：<img src="/2023/05/12/rl-05/image-20230516193624201.png" alt="image-20230516193624201">其中T为最后一个时间步。</p>
-<p>3、将存储的所有s组合输入到critic-NN网络中， 得到所有状态的V<em>值， 计算$At  = G – V$</em></p>
+<h3 id="important-sampling">Important-sampling</h3>
+<p>那么，PPO是怎样做到离线更新策略的呢？答案是Important-sampling，重要性采样技术。如果我们想用策略B抽样出来的数据，来更新策略P也不是不可以。但我们要把td-error乘以一个重要性权重（IW：importance
+weight）。重要性权重：<span class="math inline">\(IW = P（a）/
+B（a）\)</span>应用在PPO，就是目标策略出现动作a的概率 除以
+行为策略出现a的概率。回到我们之前的例子，我们可以计算出，每个动作的
+重要性权重，P: [0.5,0.5] B: [0.1,0.9]</p>
+<p>我们以a1为例，计算重要性权重<span class="math inline">\(IW = P / B =
+0.5/0.1 =
+5\)</span>我们把重要性权重乘以td-error，我们发现，a1的td-error大幅提升，而a2的td-error减少了。现在即使我们用P策略:
+[0.5,0.5]进行更新，a1提升的概率也会比a2的更多。PPO应用了importance
+sampling，使得我们用行为策略获取的数据，能够更新目标策略，把AC从在线策略，变成离线策略。</p>
+<h3 id="整体流程">整体流程</h3>
+<p>1、将环境信息s输入到actor-new网络， 得到两个值， 一个是mu， 一个是<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=sigma&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22article%22%2C%22sourceId%22%3A%2262225540%22%7D">sigma</a>，
+然后将这两个值分别当作正态分布的均值和方差构建正态分布(意义是表示action的分布)，然后通过这个正态分布sample出来一个action，
+再输入到环境中得到奖励r和下一步的状态s_，然后存储[(s,a,r),…],
+再将s_输入到actor-new网络，循环步骤1， 直到存储了一定量的[(s, a, r),
+…]， 注意这个过程中actor-new网络没有更新。</p>
+<p>2、将1循环完最后一步得到的s_输入到critic-NN网络中， 得到状态的v_值，
+然后计算折扣奖励：<img src="/2023/05/12/rl-05/image-20230516193624201.png" alt="image-20230516193624201">其中T为最后一个时间步。</p>
+<p>3、将存储的所有s组合输入到critic-NN网络中， 得到所有状态的V_值，
+计算<span class="math inline">\(At = G – V\)</span>_</p>
 <p>4、求c_loss = mean(square(At )), 然后反向传播更新critic-NN网络。</p>
-<p>5、将存储的所有s组合输入actor-old和actor-new网络(网络结构一样)， 分别得到正态分布Normal1和Normal2， 将存储的所有action组合为actions输入到正态分布Normal1和Normal2， 得到每个actions对应的prob1和prob2， 然后用prob2除以prob1得到important weight, 也就是ratio。</p>
-<p>6、根据论文公式7计算$a_loss = mean(min((ration<em> At,  clip(ratio, 1-ξ, 1+ξ)</em> At)))$, 然后反向传播， 更新actor-new网络。</p>
-<p>7、循环5-6步骤， 一定步后， 循环结束， 用actor-new网络权重来更新actor-old网络(莫凡代码是在循环开始前更新的， 效果是一样的)。</p>
+<p>5、将存储的所有s组合输入actor-old和actor-new网络(网络结构一样)，
+分别得到正态分布Normal1和Normal2，
+将存储的所有action组合为actions输入到正态分布Normal1和Normal2，
+得到每个actions对应的prob1和prob2， 然后用prob2除以prob1得到important
+weight, 也就是ratio。</p>
+<p>6、根据论文公式7计算<span class="math inline">\(a_loss =
+mean(min((ration* At, clip(ratio, 1-ξ, 1+ξ)* At)))\)</span>,
+然后反向传播， 更新actor-new网络。</p>
+<p>7、循环5-6步骤， 一定步后， 循环结束，
+用actor-new网络权重来更新actor-old网络(莫凡代码是在循环开始前更新的，
+效果是一样的)。</p>
 <p>8、循环1-7步骤。</p>
-<p><img src="/2023/05/12/rl-05/image-20230516194612456.png" alt="image-20230516194612456"></p>
-<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><ol>
-<li>我们可以用AC来解决连续型控制问题。方法是输入mu和sigma，构造一个正态分布来表示策略； </li>
-<li>PPO延展了TD(0)，变成TD(N)的N步更新； </li>
+<figure>
+<img src="/2023/05/12/rl-05/image-20230516194612456.png" alt="image-20230516194612456">
+<figcaption aria-hidden="true">image-20230516194612456</figcaption>
+</figure>
+<h2 id="小结-1">小结</h2>
+<ol type="1">
+<li>我们可以用AC来解决连续型控制问题。方法是输入mu和sigma，构造一个正态分布来表示策略；</li>
+<li>PPO延展了TD(0)，变成TD(N)的N步更新；</li>
 <li>AC是一个在线算法，但为了增加AC的效率，我们希望把它变成一个离线策略，这样就可以多次使用数据了。为了解决这个问题，PPO使用了重要性采样。</li>
 </ol>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://kerwinblog.top">mmmmlz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://kerwinblog.top/2023/05/12/rl-05/">http://kerwinblog.top/2023/05/12/rl-05/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/RL/">RL</a></div><div class="post_share"><div class="social-share" data-image="/img/11.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/05/20/0520/" title="Optimizing Feature Set for Click-Through Rate Prediction"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Optimizing Feature Set for Click-Through Rate Prediction</div></div></a></div><div class="next-post pull-right"><a href="/2023/05/10/rl-04/" title="强化学习笔记4————DQN与策略梯度(PG)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">强化学习笔记4————DQN与策略梯度(PG)</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2023/05/10/rl-04/" title="强化学习笔记4————DQN与策略梯度(PG)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-10</div><div class="title">强化学习笔记4————DQN与策略梯度(PG)</div></div></a></div><div><a href="/2023/05/08/rl-03/" title="强化学习笔记3————Qlearning和SARSA"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-08</div><div class="title">强化学习笔记3————Qlearning和SARSA</div></div></a></div><div><a href="/2023/05/06/rl-02/" title="强化学习笔记2————蒙地卡罗与时序差分"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-06</div><div class="title">强化学习笔记2————蒙地卡罗与时序差分</div></div></a></div><div><a href="/2023/05/04/rl-01/" title="强化学习笔记1————马尔科夫链与Q值和V值"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-04</div><div class="title">强化学习笔记1————马尔科夫链与Q值和V值</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/11.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">mmmmlz</div><div class="author-info__description">great ideas in CV&RS</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">22</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mmmmlz"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">Focus on the latest developments in recommendation algorithms, advertising algorithms, large models, etc.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Actor-Critic"><span class="toc-number">1.</span> <span class="toc-text">Actor-Critic</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFAC"><span class="toc-number">1.1.</span> <span class="toc-text">什么是AC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TD-error"><span class="toc-number">1.2.</span> <span class="toc-text">TD-error</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PPO"><span class="toc-number">2.</span> <span class="toc-text">PPO</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#on-policy%E4%B8%8Eoff-policy"><span class="toc-number">2.1.</span> <span class="toc-text">on-policy与off-policy</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SARSA%E7%AE%97%E6%B3%95"><span class="toc-number">2.1.1.</span> <span class="toc-text">SARSA算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q-learning"><span class="toc-number">2.1.2.</span> <span class="toc-text">Q_learning</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Proximal-Policy-Optimization"><span class="toc-number">2.2.</span> <span class="toc-text">Proximal Policy Optimization</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="toc-number">2.2.1.</span> <span class="toc-text">网络结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E8%BF%9E%E7%BB%AD%E8%BE%93%E5%87%BA"><span class="toc-number">2.2.2.</span> <span class="toc-text">产生连续输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Off-Policy"><span class="toc-number">2.2.3.</span> <span class="toc-text">Off Policy</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Important-sampling"><span class="toc-number">2.2.4.</span> <span class="toc-text">Important-sampling</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B4%E4%BD%93%E6%B5%81%E7%A8%8B"><span class="toc-number">2.2.5.</span> <span class="toc-text">整体流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="toc-number">2.3.</span> <span class="toc-text">小结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/06/02/20230601/" title="When Search Meets Recommendation">When Search Meets Recommendation</a><time datetime="2023-06-02T13:21:12.000Z" title="Created 2023-06-02 21:21:12">2023-06-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/25/0525/" title="他山之石————推荐系统中的跨域建模">他山之石————推荐系统中的跨域建模</a><time datetime="2023-05-25T11:01:41.000Z" title="Created 2023-05-25 19:01:41">2023-05-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/20/0520/" title="Optimizing Feature Set for Click-Through Rate Prediction">Optimizing Feature Set for Click-Through Rate Prediction</a><time datetime="2023-05-20T11:01:41.000Z" title="Created 2023-05-20 19:01:41">2023-05-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/12/rl-05/" title="强化学习笔记5————AC与PPO">强化学习笔记5————AC与PPO</a><time datetime="2023-05-12T13:00:18.000Z" title="Created 2023-05-12 21:00:18">2023-05-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/10/rl-04/" title="强化学习笔记4————DQN与策略梯度(PG)">强化学习笔记4————DQN与策略梯度(PG)</a><time datetime="2023-05-10T15:12:58.000Z" title="Created 2023-05-10 23:12:58">2023-05-10</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/7.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By mmmmlz</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://kerwinblog.top">mmmmlz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://kerwinblog.top/2023/05/12/rl-05/">http://kerwinblog.top/2023/05/12/rl-05/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/RL/">RL</a></div><div class="post_share"><div class="social-share" data-image="/img/11.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/05/20/0520/" title="Optimizing Feature Set for Click-Through Rate Prediction"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Optimizing Feature Set for Click-Through Rate Prediction</div></div></a></div><div class="next-post pull-right"><a href="/2023/05/10/rl-04/" title="强化学习笔记4————DQN与策略梯度(PG)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">强化学习笔记4————DQN与策略梯度(PG)</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2023/05/10/rl-04/" title="强化学习笔记4————DQN与策略梯度(PG)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-10</div><div class="title">强化学习笔记4————DQN与策略梯度(PG)</div></div></a></div><div><a href="/2023/05/08/rl-03/" title="强化学习笔记3————Qlearning和SARSA"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-08</div><div class="title">强化学习笔记3————Qlearning和SARSA</div></div></a></div><div><a href="/2023/05/06/rl-02/" title="强化学习笔记2————蒙地卡罗与时序差分"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-06</div><div class="title">强化学习笔记2————蒙地卡罗与时序差分</div></div></a></div><div><a href="/2023/05/04/rl-01/" title="强化学习笔记1————马尔科夫链与Q值和V值"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-04</div><div class="title">强化学习笔记1————马尔科夫链与Q值和V值</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/11.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">mmmmlz</div><div class="author-info__description">great ideas in CV&RS</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">22</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mmmmlz"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">Focus on the latest developments in recommendation algorithms, advertising algorithms, large models, etc.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#actor-critic"><span class="toc-number">1.</span> <span class="toc-text">Actor-Critic</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFac"><span class="toc-number">1.1.</span> <span class="toc-text">什么是AC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#td-error"><span class="toc-number">1.2.</span> <span class="toc-text">TD-error</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ppo"><span class="toc-number">2.</span> <span class="toc-text">PPO</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#on-policy%E4%B8%8Eoff-policy"><span class="toc-number">2.1.</span> <span class="toc-text">on-policy与off-policy</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#sarsa%E7%AE%97%E6%B3%95"><span class="toc-number">2.1.1.</span> <span class="toc-text">SARSA算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#q_learning"><span class="toc-number">2.1.2.</span> <span class="toc-text">Q_learning</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#proximal-policy-optimization"><span class="toc-number">2.2.</span> <span class="toc-text">Proximal Policy Optimization</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="toc-number">2.2.1.</span> <span class="toc-text">网络结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E8%BF%9E%E7%BB%AD%E8%BE%93%E5%87%BA"><span class="toc-number">2.2.2.</span> <span class="toc-text">产生连续输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#off-policy"><span class="toc-number">2.2.3.</span> <span class="toc-text">Off Policy</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#important-sampling"><span class="toc-number">2.2.4.</span> <span class="toc-text">Important-sampling</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B4%E4%BD%93%E6%B5%81%E7%A8%8B"><span class="toc-number">2.2.5.</span> <span class="toc-text">整体流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="toc-number">2.3.</span> <span class="toc-text">小结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/06/02/20230601/" title="When Search Meets Recommendation">When Search Meets Recommendation</a><time datetime="2023-06-02T13:21:12.000Z" title="Created 2023-06-02 21:21:12">2023-06-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/25/0525/" title="他山之石————推荐系统中的跨域建模">他山之石————推荐系统中的跨域建模</a><time datetime="2023-05-25T11:01:41.000Z" title="Created 2023-05-25 19:01:41">2023-05-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/20/0520/" title="Optimizing Feature Set for Click-Through Rate Prediction">Optimizing Feature Set for Click-Through Rate Prediction</a><time datetime="2023-05-20T11:01:41.000Z" title="Created 2023-05-20 19:01:41">2023-05-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/12/rl-05/" title="强化学习笔记5————AC与PPO">强化学习笔记5————AC与PPO</a><time datetime="2023-05-12T13:00:18.000Z" title="Created 2023-05-12 21:00:18">2023-05-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/10/rl-04/" title="强化学习笔记4————DQN与策略梯度(PG)">强化学习笔记4————DQN与策略梯度(PG)</a><time datetime="2023-05-10T15:12:58.000Z" title="Created 2023-05-10 23:12:58">2023-05-10</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/7.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By mmmmlz</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
   window.MathJax = {
     tex: {
       inlineMath: [ ['$','$'], ["\\(","\\)"]],
