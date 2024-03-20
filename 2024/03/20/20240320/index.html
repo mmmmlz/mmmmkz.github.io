@@ -1,0 +1,250 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>MetaSplit Meta-Split Network for Limited-Stock Product Recommendation | kerwin's notebook</title><meta name="author" content="mmmmlz"><meta name="copyright" content="mmmmlz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="从腾讯的PLE之后，很少看到有亮眼的在模型结构上做创新的推荐算法了，大多数的paper还是聚焦于某个独特的业务场景。不过这也合理，推荐算法不像CV，和业务的强绑定导致在业界很难做出本质上的创新。最近看到的一篇闲鱼出品的孤品建模就是一种强业务属性的paper。 首先定义一下孤品和新品的区别，孤品和新品都属于长尾商品，但有几点不同：  新品会随着时间而活动足量曝光和交互，孤品由于库存少，质量越好卖得越">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MetaSplit Meta-Split Network for Limited-Stock Product Recommendation">
+<meta property="og:url" content="http://kerwinblog.top/2024/03/20/20240320/index.html">
+<meta property="og:site_name" content="kerwin&#39;s notebook">
+<meta property="og:description" content="从腾讯的PLE之后，很少看到有亮眼的在模型结构上做创新的推荐算法了，大多数的paper还是聚焦于某个独特的业务场景。不过这也合理，推荐算法不像CV，和业务的强绑定导致在业界很难做出本质上的创新。最近看到的一篇闲鱼出品的孤品建模就是一种强业务属性的paper。 首先定义一下孤品和新品的区别，孤品和新品都属于长尾商品，但有几点不同：  新品会随着时间而活动足量曝光和交互，孤品由于库存少，质量越好卖得越">
+<meta property="og:locale">
+<meta property="og:image" content="http://kerwinblog.top/img/11.png">
+<meta property="article:published_time" content="2024-03-20T12:13:50.000Z">
+<meta property="article:modified_time" content="2024-03-20T13:30:09.908Z">
+<meta property="article:author" content="mmmmlz">
+<meta property="article:tag" content="Rec System">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://kerwinblog.top/img/11.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://kerwinblog.top/2024/03/20/20240320/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'MetaSplit Meta-Split Network for Limited-Stock Product Recommendation',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-03-20 21:30:09'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/backgound.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="kerwin's notebook" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/11.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> Article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/7.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="kerwin's notebook"><span class="site-name">kerwin's notebook</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> Article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">MetaSplit Meta-Split Network for Limited-Stock Product Recommendation</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-03-20T12:13:50.000Z" title="Created 2024-03-20 20:13:50">2024-03-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-03-20T13:30:09.908Z" title="Updated 2024-03-20 21:30:09">2024-03-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/paper-Reading/">paper Reading</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">2.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>7min</span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>从腾讯的PLE之后，很少看到有亮眼的在模型结构上做创新的推荐算法了，大多数的paper还是聚焦于某个独特的业务场景。不过这也合理，推荐算法不像CV，和业务的强绑定导致在业界很难做出本质上的创新。最近看到的一篇闲鱼出品的孤品建模就是一种强业务属性的paper。</p>
+<p>首先定义一下孤品和新品的区别，孤品和新品都属于长尾商品，但有几点不同：</p>
+<ol>
+<li>新品会随着时间而活动足量曝光和交互，孤品由于库存少，质量越好卖得越快下架也越快，导致积累不了太多的用户交互数据</li>
+<li>占比，在闲鱼app上，新品较少，孤品占比一半多。</li>
+</ol>
+<h3 id="难点"><a href="#难点" class="headerlink" title="难点"></a>难点</h3><p><strong>收敛性：</strong>浅库存商品的存在使得物品和消费者之间的互动变得更加稀疏，导致其Embedding在模型训练过程中收敛速度较慢甚至无法收敛。然而对于ID-based的推荐模型而言，一张训练良好的ID Embedding表可以大大提高模型的推荐能力。因此，浅库存商品的存在对推荐系统中排序模型的训练带来了巨大挑战。</p>
+<p><strong>公平性：</strong>浅库存、深库存商品在用户历史行为序列中的共存使得用户兴趣建模过程变得复杂，尤其是在序列建模常用的注意力机制过程当中。如表1所示，浅库存的稀疏交互特点，往往会导致其在计算注意力权重的时候被低估；而对于深库存商品往往积累更多用户的交互行为，导致用户序列建模的时候更偏向于深库存商品，从而大大影响整体建模的准确性。</p>
+<h3 id="业界方案"><a href="#业界方案" class="headerlink" title="业界方案"></a>业界方案</h3><ol>
+<li>元学习。通过设计特殊的策略或者网络生成新的商品emb并用来作商品推荐。</li>
+<li>消偏网络。针对长尾商品的低估问题，该类方法通过设计消偏函数或者采样函数，直接对低估商品的Logit、Loss或者样本进行加权</li>
+<li>增强个性化。该类方法通过设计专门的门控机制对模型表征进行强化以缓解训练不充分的问题</li>
+</ol>
+<h3 id="尝试过的方案"><a href="#尝试过的方案" class="headerlink" title="尝试过的方案"></a>尝试过的方案</h3><ol>
+<li>为孤品引入泛化特征，采用类似GateNet或FiBiNet的方案给孤品表征加权，对孤品样本采样或Loss加权，使用非孤品模型蒸馏孤品模型</li>
+<li>构造Mask网络用非长尾商品来fake长尾商品</li>
+<li>构造Meta网络用来为长尾商品生成缺失的特征值</li>
+<li>通过孤品优势特征输入Gate网络给孤品加权</li>
+</ol>
+<h3 id="MSNet：序列建模的孤品方案"><a href="#MSNet：序列建模的孤品方案" class="headerlink" title="MSNet：序列建模的孤品方案"></a>MSNet：序列建模的孤品方案</h3><p>​    1    通过BC行为序列拆分，避免C品和B品直接竞争而导致C品信息低估；<br>​    2    通过元学习网络，让用户序列中C品的商品ID信息和SideInfo信息（如类目、品牌等）互相增强，缓解C品的itemId Embedding学习不充分、难收敛的问题；<br>​    3    通过设计辅助Loss，使得C品即使在售出下架之后，对应的Embedding也能够持续保持更新</p>
+<p><img src="/2024/03/20/20240320/image-20240320211233230.png" alt="image-20240320211233230"></p>
+<h4 id="元学习网络"><a href="#元学习网络" class="headerlink" title="元学习网络"></a>元学习网络</h4><p>一般来说，具有相似类目、标签、品牌的商品之间也更加相似。因此我们设计了一种元学习模块，希望把这种先验信息利用起来，具体来说，我们设计了一种Scaling&amp;Shifting结构，让序列中C品的ID特征（ItemId）和SideInfo泛化特征（类目、品牌等）之间有选择地互相增强，生成新的商品ID和Sideinfo表征，进而缓解C品Embedding学习不充分的问题，公式如下，其中式(1)用Sideinfo信息增强ID信息，式(2)则用ID信息增强Sideinfo信息：</p>
+<script type="math/tex; mode=display">
+ID_{new} = ID_{origin} \oplus MetaDnn_1(\oslash SideInfo_{origin})</script><script type="math/tex; mode=display">
+SideInfo_{new} = SideInfo_{orifin} \odot MetaDnn_2(\oslash ID_{origin})</script><p>其中，$\oslash$代表停止梯度回传，$MetaDnn_1$和$MetaDNN_2$是两个元学习网络，分别对商品的原始sideinfo和原始ID做变化，并对输出的向量分别以矩阵加和元素乘的方式融合进入原始信息，生成新的ID和新的sideinfo，在进行后续的用户序列建模。这种方式的有效性在于：</p>
+<ol>
+<li>针对未训练充分的ID特征，引入学习更加充分的sideinfo信息，弥补ID特征训练不足的问题。</li>
+<li>如果某个商品的ID特征没有训练充分，模型可以感知到，并主动增强对应的泛化特征的重要性。</li>
+</ol>
+<h4 id="辅助Loss模块"><a href="#辅助Loss模块" class="headerlink" title="辅助Loss模块"></a>辅助Loss模块</h4><p>上一节解决了C类商品ID的收敛性问题，本节主要解决优质C品的售出即下架的问题。在常规的用户序列建模过程中，当一个商品下架后，它再也无法作为Target商品Q出现，而只能出现在用户序列的K和V中；而由于这些商品本身的Embedding表征并未学习充分，在Q*K相似度计算阶段得到的权重都很小，根据链式求导法则可知其Embedding更新会非常缓慢甚至停止更新。<br>通过设计辅助Loss模块，让具有相似SideInfo的商品之间的ID特征Embedding也相似，对这些C品的ID特征Embeding进行更新。该方法让QKV中的C品表征均能够得到更新，且更新梯度仅依赖于商品之间的SideInfo是否相似，具体公式如下：</p>
+<script type="math/tex; mode=display">
+Sim_{ID} = CosSim(Q_{ID},K_{ID}) \\
+Sim_{sideinfo} = CosSim(Q_{sideinfo},K_{sideinfo}) \\
+Auxloss = MSE(\oslash Sim_{ID},Sim_{sideinfo})</script><p>其中式(3)、式(4)分别计算了C品之间的itemId、SideInfo表征的两两相似度，式(5)的辅助Loss用于拉近SideInfo相似的商品之间的itemId表征的距离。这种参数更新模式不依赖商品是否下架，只要这些商品一直存在用户的历史行为序列当中，就能够持续保持更新，如图c所示。</p>
+<h3 id="扩展-近邻扩展：孤品的进一步探索"><a href="#扩展-近邻扩展：孤品的进一步探索" class="headerlink" title="(扩展)近邻扩展：孤品的进一步探索"></a>(扩展)近邻扩展：孤品的进一步探索</h3><p>上一节从用户序列建模的角度审视推荐系统的孤品问题，提出了一种系统的解决方案即MSNet网络，设计并采用「序列拆分」、「元学习网络」以及「辅助Loss」等模块让C类品的表征建模更加准确，避免了C品低估问题，也确保了售出及下架的优质C品的表征能够持续更新，对推荐系统形成持续的正向反馈。<br>从更本质的角度看，C2C平台的浅库存商品预估不准，就是由其交互数据少导致的Embedding表征学习不充分造成的。一种直观的解法就是对商品“打包”，即针对一系列相似属性的商品构造相同的聚类ID，同一聚类ID下的商品共同积累用户对这个聚类ID下的交互数据——通过这种方式，可以让交互稀疏的C类品享受到其相似B类品丰富交互信息的福利，或者让多个相似的C品共享用户的交互数据，加速C品Embedding的学习和收敛，提升对C品的预估能力。<br>综上，孤品建模的关键问题有两个：<br>1)如何构造聚类ID，或者换句话说，如何在不依赖用户交互数据的前提下，衡量两个商品是否相似，相似程度多高；<br>2)假设我们已经构造出了商品聚类ID，如何应用到排序模型当中，在保证B类品效果的同时，进一步提升C品的预估准度。</p>
+<h4 id="近邻分析"><a href="#近邻分析" class="headerlink" title="近邻分析"></a>近邻分析</h4><p>一个商品包含静态属性和动态属性，其中动态属性即用户的交互数据，而静态数据由文本信息和图片信息构成。孤品的动态数据不足，因此我们期望从文本和图片两个维度，构建商品的相似信息。从文本角度来说，我们通过商品的叶子类目、品牌、文字描述实体的叉乘，构建商品的Spu_id。从图片角度来说，此外还有商品的图片聚类ID。<br>基于近邻扩展的孤品建模方案<br>如何将这种相似近邻信息融入排序模型？<br>历史实验表明，直接将候选商品所属的图搜聚类（ImgID）和文本聚类（SpuID）作为简单特征引入模型（和其余所有特征Concat在一起之后作为DNN层的输入）无法给模型带来正向的收益，几个可能原因：1）基线模型水位较高，输入特征超过200个，总维度超过2000维，单纯引入两个新特征的信息难以被模型捕捉；2）这两个新特征的hashBktSize达到亿的量级，直接作为DNN特征引入模型从零开始训练，新增后续DNN的节点权重小，根据链式法则分配到的梯度小更新慢，导致Embedding难以收敛。</p>
+<p>针对上述直接引入特征的失效问题，解决思路有两步：1）为模型设计专门的结构，更好地捕获新特征的信息，防止信息淹没；2）尽可能让新特征在模型的更多结构中出现，这样一轮“前向+后向”传播过程可以对新特征进行多次梯度更新，加速学习和收敛。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://kerwinblog.top">mmmmlz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://kerwinblog.top/2024/03/20/20240320/">http://kerwinblog.top/2024/03/20/20240320/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Rec-System/">Rec System</a></div><div class="post_share"><div class="social-share" data-image="/img/11.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/03/07/exl0ikam50/" title=""><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info"></div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2023/06/02/20230601/" title="When Search Meets Recommendation"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-02</div><div class="title">When Search Meets Recommendation</div></div></a></div><div><a href="/2023/05/03/0503/" title="Let’s think step by step"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-03</div><div class="title">Let’s think step by step</div></div></a></div><div><a href="/2023/03/19/0319/" title="Position bias"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-19</div><div class="title">Position bias</div></div></a></div><div><a href="/2023/03/03/%E6%B7%B7%E6%8E%92%E6%8E%A2%E7%B4%A2/" title="混排到底该怎么排？"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-03</div><div class="title">混排到底该怎么排？</div></div></a></div><div><a href="/2023/02/24/0224/" title="猜你想去？"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-24</div><div class="title">猜你想去？</div></div></a></div><div><a href="/2023/01/14/0112/" title="Dynamic Knapsack Optimization Towards Efficient Multi-Channel Sequential Advertising"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-01-14</div><div class="title">Dynamic Knapsack Optimization Towards Efficient Multi-Channel Sequential Advertising</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/11.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">mmmmlz</div><div class="author-info__description">great ideas in CV&RS</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mmmmlz"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">Focus on the latest developments in recommendation algorithms, advertising algorithms, large models, etc.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9A%BE%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text">难点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%9A%E7%95%8C%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">业界方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E8%BF%87%E7%9A%84%E6%96%B9%E6%A1%88"><span class="toc-number">3.</span> <span class="toc-text">尝试过的方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSNet%EF%BC%9A%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1%E7%9A%84%E5%AD%A4%E5%93%81%E6%96%B9%E6%A1%88"><span class="toc-number">4.</span> <span class="toc-text">MSNet：序列建模的孤品方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%83%E5%AD%A6%E4%B9%A0%E7%BD%91%E7%BB%9C"><span class="toc-number">4.1.</span> <span class="toc-text">元学习网络</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%85%E5%8A%A9Loss%E6%A8%A1%E5%9D%97"><span class="toc-number">4.2.</span> <span class="toc-text">辅助Loss模块</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95-%E8%BF%91%E9%82%BB%E6%89%A9%E5%B1%95%EF%BC%9A%E5%AD%A4%E5%93%81%E7%9A%84%E8%BF%9B%E4%B8%80%E6%AD%A5%E6%8E%A2%E7%B4%A2"><span class="toc-number">5.</span> <span class="toc-text">(扩展)近邻扩展：孤品的进一步探索</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%91%E9%82%BB%E5%88%86%E6%9E%90"><span class="toc-number">5.1.</span> <span class="toc-text">近邻分析</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/20/20240320/" title="MetaSplit Meta-Split Network for Limited-Stock Product Recommendation">MetaSplit Meta-Split Network for Limited-Stock Product Recommendation</a><time datetime="2024-03-20T12:13:50.000Z" title="Created 2024-03-20 20:13:50">2024-03-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/07/exl0ikam50/" title="No title">No title</a><time datetime="2024-03-07T12:03:00.753Z" title="Created 2024-03-07 20:03:00">2024-03-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/06/02/20230601/" title="When Search Meets Recommendation">When Search Meets Recommendation</a><time datetime="2023-06-02T13:21:12.000Z" title="Created 2023-06-02 21:21:12">2023-06-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/25/0525/" title="他山之石————推荐系统中的跨域建模">他山之石————推荐系统中的跨域建模</a><time datetime="2023-05-25T11:01:41.000Z" title="Created 2023-05-25 19:01:41">2023-05-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/05/20/0520/" title="Optimizing Feature Set for Click-Through Rate Prediction">Optimizing Feature Set for Click-Through Rate Prediction</a><time datetime="2023-05-20T11:01:41.000Z" title="Created 2023-05-20 19:01:41">2023-05-20</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/7.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By mmmmlz</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script></div></body></html>

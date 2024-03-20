@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://kerwinblog.top/2024/03/20/20240320/</loc>
+    
+    <lastmod>2024-03-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://kerwinblog.top/2024/03/07/exl0ikam50/</loc>
     
     <lastmod>2024-03-17</lastmod>
@@ -266,14 +275,14 @@
   </url>
   
   <url>
-    <loc>http://kerwinblog.top/tags/LLM/</loc>
+    <loc>http://kerwinblog.top/tags/RS/</loc>
     <lastmod>2024-03-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://kerwinblog.top/tags/RS/</loc>
+    <loc>http://kerwinblog.top/tags/LLM/</loc>
     <lastmod>2024-03-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -287,14 +296,14 @@
   </url>
   
   <url>
-    <loc>http://kerwinblog.top/tags/RL/</loc>
+    <loc>http://kerwinblog.top/tags/causal/</loc>
     <lastmod>2024-03-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://kerwinblog.top/tags/causal/</loc>
+    <loc>http://kerwinblog.top/tags/RL/</loc>
     <lastmod>2024-03-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
